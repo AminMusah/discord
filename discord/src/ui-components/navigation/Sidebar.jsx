@@ -8,6 +8,8 @@ import { UserAvatar } from "../user-avatar";
 import image from "../../assets/guillermo-diaz-fs6zYhHyzvI-unsplash.jpg";
 import url from "../../api/url";
 import { useModal } from "../../hooks/use-modal-store";
+import { useDispatch, useSelector } from "react-redux";
+import { getProfile } from "../../redux/apiCalls";
 
 const Sidebar = () => {
   const [servers, setServers] = useState([]);

@@ -6,12 +6,6 @@ const jwt = require("jsonwebtoken");
 // register
 const register = async (req, res) => {
   try {
-    //validate data
-    // const { error } = registerValidation(req.body);
-    // if (error) {
-    //   return res.status(400).send({ message: error.details[0].message });
-    // }
-
     // checking if user already exists in the database
     const emailExist = await Profile.findOne({ email: req.body.email });
     if (emailExist) {
@@ -39,12 +33,6 @@ const register = async (req, res) => {
 // login
 const login = async (req, res) => {
   try {
-    //validate data
-    // const { error } = loginValidation(req.body);
-    // if (error) {
-    //   return res.status(400).send({ message: error.details[0].message });
-    // }
-
     // checking if user already exists in the database
     const user = await Profile.findOne({ email: req.body.email });
     if (!user) {

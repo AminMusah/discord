@@ -1,10 +1,35 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { ChatHeader } from "../ui-components/chat/chat-header";
+import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { getChannel } from "../redux/apiCalls";
 
-const Channel = () => {
+const Channel = ({ servers, user }) => {
+  const [channels, setChannels] = useState("");
+
+  const params = useParams();
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getChannel());
+  }, [dispatch]);
+
+  const channel = useSelector((state) => state?.channel?.channel);
+
+  useEffect(() => {
+    setChannels(channel);
+  }, [channel]);
+
+  const serverChannel = channel.find((channel) => channel._id === params.id);
+
   return (
     <div className="bg-white dark:bg-[#313338] flex flex-col h-full">
-      <ChatHeader name="hello" serverId="hello" type="channel" />
+      <ChatHeader
+        name={serverChannel?.name}
+        serverId={servers?._id}
+        type="channel"
+      />
       {/* {channel.type === ChannelType.TEXT && ( */}
       <>
         {/* <ChatMessages

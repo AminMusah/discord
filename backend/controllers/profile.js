@@ -27,6 +27,9 @@ const getProfile = async (req, res) => {
         {
           path: "servers",
         },
+        {
+          path: "channels",
+        },
       ])
       .sort({ createdAt: 1 });
     const { password, ...others } = profile._doc;

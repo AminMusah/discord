@@ -1,8 +1,8 @@
-const Server = require("../model/Server");
-const Profile = require("../model/Profile");
 const { v4: uuidv4 } = require("uuid");
 const Channel = require("../model/Channel");
 const Member = require("../model/Member");
+const Server = require("../model/Server");
+const Profile = require("../model/Profile");
 
 // create server
 const createServer = async (req, res) => {
@@ -18,12 +18,13 @@ const createServer = async (req, res) => {
       inviteCode: uuidv4(),
     });
 
-    await server.save();
+    // await server.save();
 
-    // Create a default channel for the server
+    //Create a default channel for the server
     const defaultChannel = new Channel({
       profile: _id,
       name: "general",
+      type: "TEXT",
     });
 
     // Save the channel and add its ID to the server's channels array
@@ -46,12 +47,16 @@ const createServer = async (req, res) => {
 
     // Add the server ID to the user's servers array
     await Profile.findByIdAndUpdate(_id, { $push: { servers: server._id } });
+
     await Profile.findByIdAndUpdate(_id, {
       $push: { channels: defaultChannel._id },
     });
+
     await Profile.findByIdAndUpdate(_id, { $push: { members: member._id } });
+
     res.status(200).json({ message: "server created!", data: server });
   } catch (error) {
+    console.log(error);
     res.status(500).send(error);
   }
 };
@@ -74,7 +79,8 @@ const getServer = async (req, res) => {
     const { id } = req.params;
     const server = await Server.findById(id)
       .populate("profile")
-      .populate("channels");
+      .populate("channels")
+      .populate("members");
     res.status(200).json(server);
   } catch (error) {
     res.status(500).send(error);

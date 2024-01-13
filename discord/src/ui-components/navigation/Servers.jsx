@@ -19,8 +19,6 @@ export const ServerItem = ({ id, imageUrl, name }) => {
     navigate(`/server/${id}`);
   };
 
-  // dispatch(fetchUsers());
-
   return (
     <TooltipProvider>
       <Tooltip delayDuration={50}>

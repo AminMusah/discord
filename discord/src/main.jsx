@@ -22,10 +22,16 @@ const router = createBrowserRouter([
   {
     path: "/server/:id",
     element: <Server />,
-  },
-  {
-    path: "/server/:id/channel/:id",
-    element: <Channel />,
+    children: [
+      {
+        path: "channel/:id",
+        element: <Channel />,
+        loader: ({ request }) =>
+          fetch("/channel/:id", {
+            signal: request.signal,
+          }),
+      },
+    ],
   },
   {
     path: "/auth/register",

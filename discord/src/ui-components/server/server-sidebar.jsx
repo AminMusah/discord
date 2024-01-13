@@ -12,6 +12,11 @@ import { Separator } from "@/components/ui/separator";
 import ServerHeader from "./server-header";
 import image from "../../assets/guillermo-diaz-fs6zYhHyzvI-unsplash.jpg";
 import { UserAvatar } from "../user-avatar";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { getProfile, getServer } from "../../redux/apiCalls";
+import { ServerSection } from "./server-section";
+import { ServerChannel } from "./server-channel";
 
 // import { ServerHeader } from "./server-header";
 // import { ServerSearch } from "./server-search";
@@ -34,63 +39,49 @@ import { UserAvatar } from "../user-avatar";
 // };
 
 const ServerSidebar = ({ servers }) => {
-  console.log(servers, "image");
-  // const profile = await currentProfile();
-  // if (!profile) {
-  //   return redirect("/");
-  // }
+  const [profile, setProfile] = useState("");
 
-  // const server = await db.server.findUnique({
-  //   where: {
-  //     id: serverId,
-  //   },
-  //   include: {
-  //     channels: {
-  //       orderBy: {
-  //         createdAt: "asc",
-  //       },
-  //     },
-  //     members: {
-  //       include: {
-  //         profile: true,
-  //       },
-  //       orderBy: {
-  //         role: "asc",
-  //       },
-  //     },
-  //   },
-  // });
+  const dispatch = useDispatch();
 
-  // const textChannels = server?.channels.filter(
-  //   (channel) => channel.type === ChannelType.TEXT
-  // );
-  // const audioChannels = server?.channels.filter(
-  //   (channel) => channel.type === ChannelType.AUDIO
-  // );
-  // const videoChannels = server?.channels.filter(
-  //   (channel) => channel.type === ChannelType.VIDEO
-  // );
-  // const members = server?.members.filter(
-  //   (member) => member.profileId !== profile.id
-  // );
+  useEffect(() => {
+    dispatch(getProfile());
+  }, [dispatch]);
+
+  const user = useSelector((state) => state.profile.profile);
+
+  useEffect(() => {
+    setProfile(user);
+  }, [user]);
+
+  const textChannels = user?.channels?.find(
+    (channel) => channel?.type === "TEXT"
+  );
+
+  const audioChannels = servers?.channels.filter(
+    (channel) => channel.type === "AUDIO"
+  );
+
+  const videoChannels = servers?.channels.filter(
+    (channel) => channel.type === "VIDEO"
+  );
+
+  const member = servers?.members.filter(
+    (member) => member.profile !== user._id
+  );
 
   // if (!server) {
   //   return redirect("/");
   // }
 
-  // const role = server.members.find(
-  //   (member) => member.profileId === profile.id
-  // )?.role;
+  const role = servers?.members.find(
+    (member) => member.profile === user._id
+  )?.role;
 
   return (
     <div className="flex flex-col h-full text-primary w-full dark:bg-[#2B2D31] bg-[#F2F3F5]">
-      <ServerHeader
-        server={servers}
-        //  role={role}
-      />
-      {/* <ScrollArea className="flex-1 px-3"> */}
-
-      {/* <div className="mt-2">
+      <ServerHeader server={servers} role={role} />
+      <ScrollArea className="flex-1 px-3">
+        {/* <div className="mt-2">
           <ServerSearch
             data={[
               {
@@ -132,83 +123,73 @@ const ServerSidebar = ({ servers }) => {
             ]}
           />
         </div> */}
-      {/* <Separator className="bg-zinc-200 dark:bg-zinc-700 rounded-md my-2" /> */}
-      {/* {!!textChannels?.length && (
-          <div className="mb-2">
-            <ServerSection
-              sectionType="channels"
-              channelType={ChannelType.TEXT}
+        <Separator className="bg-zinc-200 dark:bg-zinc-700 rounded-md my-2" />
+        {/* {!!textChannels?.length && ( */}
+        <div className="mb-2">
+          <ServerSection
+            sectionType="channels"
+            // channelType={ChannelType.TEXT}
+            role={role}
+            label="Text Channels"
+          />
+          <div className="space-y-[2px]">
+            <ServerChannel
+              key={textChannels?._id}
+              channel={textChannels}
               role={role}
-              label="Text Channels"
+              server={servers}
             />
-            <div className="space-y-[2px]">
-              {textChannels.map((channel) => (
-                <ServerChannel
-                  key={channel.id}
-                  channel={channel}
-                  role={role}
-                  server={server}
-                />
-              ))}
-            </div>
           </div>
-        )} */}
-      {/* {!!audioChannels?.length && (
-          <div className="mb-2">
-            <ServerSection
-              sectionType="channels"
-              channelType={ChannelType.AUDIO}
+        </div>
+        {/* )} */}
+        {/* {!!audioChannels?.length && ( */}
+        <div className="mb-2">
+          <ServerSection
+            sectionType="channels"
+            // channelType={ChannelType.AUDIO}
+            role={role}
+            label="Voice Channels"
+          />
+          <div className="space-y-[2px]">
+            <ServerChannel
+              channel={audioChannels}
               role={role}
-              label="Voice Channels"
+              server={servers}
             />
-            <div className="space-y-[2px]">
-              {audioChannels.map((channel) => (
-                <ServerChannel
-                  key={channel.id}
-                  channel={channel}
-                  role={role}
-                  server={server}
-                />
-              ))}
-            </div>
           </div>
-        )} */}
-      {/* {!!videoChannels?.length && (
-          <div className="mb-2">
-            <ServerSection
-              sectionType="channels"
-              channelType={ChannelType.VIDEO}
+        </div>
+        {/* )} */}
+        {/* {!!videoChannels?.length && ( */}
+        <div className="mb-2">
+          <ServerSection
+            sectionType="channels"
+            // channelType={ChannelType.VIDEO}
+            role={role}
+            label="Video Channels"
+          />
+          <div className="space-y-[2px]">
+            <ServerChannel
+              channel={videoChannels}
               role={role}
-              label="Video Channels"
+              server={servers}
             />
-            <div className="space-y-[2px]">
-              {videoChannels.map((channel) => (
-                <ServerChannel
-                  key={channel.id}
-                  channel={channel}
-                  role={role}
-                  server={server}
-                />
-              ))}
-            </div>
           </div>
-        )} */}
-      {/* {!!members?.length && (
-          <div className="mb-2">
-            <ServerSection
-              sectionType="members"
-              role={role}
-              label="Members"
-              server={server}
-            />
-            <div className="space-y-[2px]">
-              {members.map((member) => (
-                <ServerMember key={member.id} member={member} server={server} />
-              ))}
-            </div>
+        </div>
+        {/* )} */}
+        {/* {!!members?.length && ( */}
+        <div className="mb-2">
+          <ServerSection
+            sectionType="members"
+            role={role}
+            label="Members"
+            server={servers}
+          />
+          <div className="space-y-[2px]">
+            {/* <ServerMember  member={member} server={server} /> */}
           </div>
-        )} */}
-      {/* </ScrollArea> */}
+        </div>
+        {/* )} */}
+      </ScrollArea>
       <div className="flex justify-between items-center w-full absolute bottom-2 mx-2">
         <div className="flex">
           <UserAvatar

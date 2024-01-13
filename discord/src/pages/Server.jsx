@@ -6,6 +6,7 @@ import ServerId from "./ServerId";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUsers } from "../redux/apiCalls";
 import { useNavigate } from "react-router-dom";
+import Channel from "./Channel";
 
 const Server = () => {
   return (

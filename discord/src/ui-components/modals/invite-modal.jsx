@@ -12,14 +12,16 @@ import { Label } from "@/components/ui/label";
 import { useModal } from "@/hooks/use-modal-store";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useDispatch } from "react-redux";
 // import { useOrigin } from "@/hooks/use-origin";
 
 export const InviteModal = () => {
+  const dispatch = useDispatch();
   const { onOpen, isOpen, onClose, type, data } = useModal();
   // const origin = useOrigin();
 
   const isModalOpen = isOpen && type === "invite";
-  const { server } = data;
+  const { name } = data;
 
   const [copied, setCopied] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -55,7 +57,7 @@ export const InviteModal = () => {
       <DialogContent className="bg-white text-black p-0 overflow-hidden">
         <DialogHeader className="pt-8 px-6">
           <DialogTitle className="text-2xl text-center font-bold">
-            Invite Friends
+            Invite Friends to {name}
           </DialogTitle>
         </DialogHeader>
         <div className="p-6">
