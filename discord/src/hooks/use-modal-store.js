@@ -13,6 +13,7 @@ export const useModal = create((set) => ({
     "editChannel" ||
     "messageFile" ||
     "deleteMessage" ||
+    "prfile" ||
     null,
   data: {},
   isOpen: false,

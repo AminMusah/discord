@@ -17,6 +17,7 @@ import { useEffect, useState } from "react";
 import { getProfile, getServer } from "../../redux/apiCalls";
 import { ServerSection } from "./server-section";
 import { ServerChannel } from "./server-channel";
+import { useModal } from "../../hooks/use-modal-store";
 
 // import { ServerHeader } from "./server-header";
 // import { ServerSearch } from "./server-search";
@@ -42,6 +43,7 @@ const ServerSidebar = ({ servers }) => {
   const [profile, setProfile] = useState("");
 
   const dispatch = useDispatch();
+  const { onOpen } = useModal();
 
   useEffect(() => {
     dispatch(getProfile());
@@ -200,7 +202,10 @@ const ServerSidebar = ({ servers }) => {
         </div>
         <div className="mr-4 flex">
           <Mic className="h-4 w-4 mr-2" />
-          <Settings className="h-4 w-4 mr-2" />
+          <Settings
+            className="h-4 w-4 mr-2 cursor-pointer"
+            onClick={() => onOpen("profile")}
+          />
         </div>
       </div>
     </div>
