@@ -23,13 +23,15 @@ const Channel = ({ servers, user }) => {
 
   const serverChannel = channel.find((channel) => channel._id === params.id);
 
+  console.log();
+
   return (
     <div className="bg-white dark:bg-[#313338] flex flex-col h-full">
-      <ChatHeader
+      {/* <ChatHeader
         name={serverChannel?.name}
         serverId={servers?._id}
         type="channel"
-      />
+      /> */}
       {/* {channel.type === ChannelType.TEXT && ( */}
       <>
         {/* <ChatMessages

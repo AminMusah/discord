@@ -11,27 +11,11 @@ import { useModal } from "../../hooks/use-modal-store";
 import { useDispatch, useSelector } from "react-redux";
 import { getProfile } from "../../redux/apiCalls";
 
-const Sidebar = () => {
-  const [servers, setServers] = useState([]);
-  const { isOpen, onClose } = useModal();
-
-  useEffect(() => {
-    const getServer = async () => {
-      const userId = localStorage.getItem("user");
-      try {
-        const server = await url.get(`/profile/${userId}`);
-        setServers(server.data.servers);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getServer();
-  }, [isOpen, onClose]);
-
+const Sidebar = ({ profile }) => {
   return (
     <div className="space-y-4 flex flex-col items-center h-full text-primary w-full dark:bg-[#1E1F22] bg-[#E3E5E8] py-3">
       <ScrollArea className="flex-1 w-full">
-        {servers.map((server) => (
+        {profile?.servers?.map((server) => (
           <div key={server?._id} className="mb-4">
             <ServerItem
               id={server?._id}

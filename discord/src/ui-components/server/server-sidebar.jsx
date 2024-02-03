@@ -18,12 +18,7 @@ import { getProfile, getServer } from "../../redux/apiCalls";
 import { ServerSection } from "./server-section";
 import { ServerChannel } from "./server-channel";
 import { useModal } from "../../hooks/use-modal-store";
-
-// import { ServerHeader } from "./server-header";
-// import { ServerSearch } from "./server-search";
-// import { ServerSection } from "./server-section";
-// import { ServerChannel } from "./server-channel";
-// import { ServerMember } from "./server-member";
+import { redirect } from "react-router-dom";
 
 // const iconMap = {
 //   [ChannelType.TEXT]: <Hash className="mr-2 h-4 w-4" />,
@@ -55,33 +50,29 @@ const ServerSidebar = ({ servers }) => {
     setProfile(user);
   }, [user]);
 
-  const textChannels = user?.channels?.find(
-    (channel) => channel?.type === "TEXT"
-  );
+  // const textChannels = user?.channels?.find(
+  //   (channel) => channel?.type === "TEXT"
+  // );
 
-  const audioChannels = servers?.channels.filter(
-    (channel) => channel.type === "AUDIO"
-  );
+  // const audioChannels = servers?.channels.filter(
+  //   (channel) => channel?.type === "AUDIO"
+  // );
 
-  const videoChannels = servers?.channels.filter(
-    (channel) => channel.type === "VIDEO"
-  );
+  // const videoChannels = servers?.channels.filter(
+  //   (channel) => channel?.type === "VIDEO"
+  // );
 
-  const member = servers?.members.filter(
-    (member) => member.profile !== user._id
-  );
+  // const member = servers?.members?.filter(
+  //   (member) => member?.profile !== user._id
+  // );
 
-  // if (!server) {
-  //   return redirect("/");
-  // }
-
-  const role = servers?.members.find(
-    (member) => member.profile === user._id
-  )?.role;
+  // const role = servers?.members?.find(
+  //   (member) => member?.profile === user._id
+  // )?.role;
 
   return (
     <div className="flex flex-col h-full text-primary w-full dark:bg-[#2B2D31] bg-[#F2F3F5]">
-      <ServerHeader server={servers} role={role} />
+      {/* <ServerHeader server={servers} role={role} /> */}
       <ScrollArea className="flex-1 px-3">
         {/* <div className="mt-2">
           <ServerSearch
@@ -128,64 +119,64 @@ const ServerSidebar = ({ servers }) => {
         <Separator className="bg-zinc-200 dark:bg-zinc-700 rounded-md my-2" />
         {/* {!!textChannels?.length && ( */}
         <div className="mb-2">
-          <ServerSection
+          {/* <ServerSection
             sectionType="channels"
             // channelType={ChannelType.TEXT}
             role={role}
             label="Text Channels"
-          />
+          /> */}
           <div className="space-y-[2px]">
-            <ServerChannel
+            {/* <ServerChannel
               key={textChannels?._id}
               channel={textChannels}
               role={role}
               server={servers}
-            />
+            /> */}
           </div>
         </div>
         {/* )} */}
         {/* {!!audioChannels?.length && ( */}
         <div className="mb-2">
-          <ServerSection
+          {/* <ServerSection
             sectionType="channels"
             // channelType={ChannelType.AUDIO}
             role={role}
             label="Voice Channels"
-          />
+          /> */}
           <div className="space-y-[2px]">
-            <ServerChannel
+            {/* <ServerChannel
               channel={audioChannels}
               role={role}
               server={servers}
-            />
+            /> */}
           </div>
         </div>
         {/* )} */}
         {/* {!!videoChannels?.length && ( */}
         <div className="mb-2">
-          <ServerSection
+          {/* <ServerSection
             sectionType="channels"
             // channelType={ChannelType.VIDEO}
             role={role}
             label="Video Channels"
-          />
+          /> */}
           <div className="space-y-[2px]">
-            <ServerChannel
+            {/* <ServerChannel
               channel={videoChannels}
               role={role}
               server={servers}
-            />
+            /> */}
           </div>
         </div>
         {/* )} */}
         {/* {!!members?.length && ( */}
         <div className="mb-2">
-          <ServerSection
+          {/* <ServerSection
             sectionType="members"
             role={role}
             label="Members"
             server={servers}
-          />
+          /> */}
           <div className="space-y-[2px]">
             {/* <ServerMember  member={member} server={server} /> */}
           </div>

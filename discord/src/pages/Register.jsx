@@ -15,7 +15,6 @@ const SignUp = () => {
   const onSubmit = async (data) => {
     try {
       const register = await url.post(`/register/`, data);
-      console.log(register);
       navigate(`/login/`);
       toast.success("Registered Successfully!!");
       navigate("/");

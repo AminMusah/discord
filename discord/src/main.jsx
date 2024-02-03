@@ -26,10 +26,10 @@ const router = createBrowserRouter([
       {
         path: "channel/:id",
         element: <Channel />,
-        loader: ({ request }) =>
-          fetch("/channel/:id", {
-            signal: request.signal,
-          }),
+        // loader: ({ request }) =>
+        //   fetch("/channel/:id", {
+        //     signal: request.signal,
+        //   }),
       },
     ],
   },

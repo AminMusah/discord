@@ -17,11 +17,11 @@ import {
   getChannelSuccess,
 } from "./channelSlice";
 
+// All users
 export const fetchUsers = () => async (dispatch) => {
   try {
     dispatch(getUsersStart());
     const response = await url.get("/profiles");
-    console.log({ response });
     dispatch(getUsersSuccess(response.data));
   } catch (error) {
     dispatch(getUsersFailure(error.message));
@@ -29,9 +29,8 @@ export const fetchUsers = () => async (dispatch) => {
   }
 };
 
-export const getProfile = () => async (dispatch) => {
-  const userId = localStorage.getItem("user");
-
+// Current user
+export const getProfile = (userId) => async (dispatch) => {
   try {
     dispatch(getProfileStart());
     const response = await url.get(`/profile/${userId}`);
@@ -41,7 +40,8 @@ export const getProfile = () => async (dispatch) => {
   }
 };
 
-export const getServer = () => async (dispatch) => {
+// All servers
+export const getServers = () => async (dispatch) => {
   try {
     dispatch(getServerStart());
     const response = await url.get(`/server/`);
@@ -51,6 +51,7 @@ export const getServer = () => async (dispatch) => {
   }
 };
 
+// All channels
 export const getChannel = () => async (dispatch) => {
   try {
     dispatch(getChannelStart());
@@ -58,5 +59,17 @@ export const getChannel = () => async (dispatch) => {
     dispatch(getChannelSuccess(response.data));
   } catch (error) {
     dispatch(getChannelFailure(error.message));
+  }
+};
+
+// single server
+export const getServer = (serverId) => async (dispatch) => {
+  try {
+    dispatch(getServerStart());
+    const response = await url.get(`/server/${serverId}`);
+    console.log({ response });
+    dispatch(getServerSuccess(response.data));
+  } catch (error) {
+    dispatch(getServerFailure(error.message));
   }
 };

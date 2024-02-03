@@ -19,6 +19,12 @@ export const ServerItem = ({ id, imageUrl, name }) => {
     navigate(`/server/${id}`);
   };
 
+  // if (params?.id === id) {
+  //   console.log(id);
+  // } else {
+  //   console.log(id);
+  // }
+
   return (
     <TooltipProvider>
       <Tooltip delayDuration={50}>

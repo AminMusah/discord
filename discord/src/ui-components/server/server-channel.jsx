@@ -10,6 +10,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useModal } from "../../hooks/use-modal-store";
+import { useEffect } from "react";
 
 // const iconMap = {
 //   [ChannelType.TEXT]: Hash,
@@ -24,9 +25,14 @@ export const ServerChannel = ({ channel, role, server }) => {
 
   // const Icon = iconMap[channel.type];
 
+  // console.log(channel);
+
   const onClick = () => {
-    navigate(`/server/${server?._id}/channel/${channel._id}`);
-    console.log(`/server/${server?._id}/channel/${channel._id}`);
+    // Check if both server and channel are available before navigating
+    if (server && channel && server?._id && channel._id) {
+      navigate(`/server/${server?._id}/channel/${channel?._id}`);
+    }
+    // console.log(server);
   };
 
   // const onAction = (e) => {

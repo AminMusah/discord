@@ -31,7 +31,6 @@ const CreateServerModal = () => {
     try {
       const server = await url.post(`/createserver/`, data);
       redirect(`/server/${server.data.data._id}`);
-      console.log(server);
       onClose();
       toast.success(server.data.message);
     } catch (error) {
