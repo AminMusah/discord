@@ -8,46 +8,28 @@ import { useDispatch, useSelector } from "react-redux";
 import { getProfile, getServer } from "../redux/apiCalls";
 
 const ServerId = ({ profile }) => {
-  const [server, setServer] = useState(null);
-  // const [profile, setProfile] = useState("");
-
   const params = useParams();
-
-  // useEffect(() => {
-  //   const getServer = async () => {
-  //     try {
-  //       const server = await url.get(`/server/${params?.id}`);
-  //       setServers(server?.data);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-  //   getServer();
-  // }, []);
-
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getServer(params?.id));
-  }, [dispatch]);
+    try {
+      dispatch(getServer(params?.id));
+    } catch (error) {
+      console.error("Error fetching server:", error);
+    }
+  }, [dispatch, params?.id]);
 
-  const currentServer = useSelector((state) => state.server.server);
-
-  useEffect(() => {
-    setServer(currentServer);
-  }, [currentServer]);
-
-  console.log(server);
+  const server = useSelector((state) => state.server.server);
 
   return (
     <div>
       <div className="md:flex h-full w-60 z-20 flex-col fixed inset-y-0">
-        {/* <ServerSidebar servers={profile?.servers} /> */}
+        <ServerSidebar server={server} />
       </div>
-      {/* <div className="h-full md:pl-60">
+      <div className="h-full md:pl-60">
         {" "}
-        <Channel servers={profile?.servers} user={profile} />
-      </div> */}
+        <Channel server={server} profile={profile} />
+      </div>
     </div>
   );
 };

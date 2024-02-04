@@ -67,7 +67,6 @@ export const getServer = (serverId) => async (dispatch) => {
   try {
     dispatch(getServerStart());
     const response = await url.get(`/server/${serverId}`);
-    console.log({ response });
     dispatch(getServerSuccess(response.data));
   } catch (error) {
     dispatch(getServerFailure(error.message));

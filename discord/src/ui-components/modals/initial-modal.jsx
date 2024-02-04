@@ -17,15 +17,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import url from "../../api/url";
+import { useDispatch, useSelector } from "react-redux";
+import { getProfile } from "../../redux/apiCalls";
 // import { FileUpload } from "@/components/file-upload";
 
 export const InitialModal = () => {
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
   const { register, handleSubmit, watch, formState } = useForm();
 
   const isLoading = formState.isSubmitting;
@@ -42,9 +38,21 @@ export const InitialModal = () => {
     }
   };
 
-  if (!isMounted) {
-    return null;
-  }
+  const userId = localStorage.getItem("user");
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getProfile(userId));
+  }, [dispatch]);
+
+  const profile = useSelector((state) => state.profile.profile);
+
+  useEffect(() => {
+    if (!profile) {
+      navigate("/");
+    }
+  }, []);
 
   return (
     <Dialog open>

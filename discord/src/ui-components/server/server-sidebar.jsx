@@ -34,25 +34,13 @@ import { redirect } from "react-router-dom";
 //   [MemberRole.ADMIN]: <ShieldAlert className="h-4 w-4 mr-2 text-rose-500" />,
 // };
 
-const ServerSidebar = ({ servers }) => {
-  const [profile, setProfile] = useState("");
-
-  const dispatch = useDispatch();
+const ServerSidebar = ({ server }) => {
   const { onOpen } = useModal();
+  const userId = localStorage.getItem("user");
 
-  useEffect(() => {
-    dispatch(getProfile());
-  }, [dispatch]);
-
-  const user = useSelector((state) => state.profile.profile);
-
-  useEffect(() => {
-    setProfile(user);
-  }, [user]);
-
-  // const textChannels = user?.channels?.find(
-  //   (channel) => channel?.type === "TEXT"
-  // );
+  const textChannels = server?.channels?.find(
+    (channel) => channel?.type === "TEXT"
+  );
 
   // const audioChannels = servers?.channels.filter(
   //   (channel) => channel?.type === "AUDIO"
@@ -66,13 +54,13 @@ const ServerSidebar = ({ servers }) => {
   //   (member) => member?.profile !== user._id
   // );
 
-  // const role = servers?.members?.find(
-  //   (member) => member?.profile === user._id
-  // )?.role;
+  const role = server?.members?.find(
+    (member) => member?.profile === userId
+  )?.role;
 
   return (
     <div className="flex flex-col h-full text-primary w-full dark:bg-[#2B2D31] bg-[#F2F3F5]">
-      {/* <ServerHeader server={servers} role={role} /> */}
+      <ServerHeader server={server} role={role} />
       <ScrollArea className="flex-1 px-3">
         {/* <div className="mt-2">
           <ServerSearch
@@ -119,19 +107,19 @@ const ServerSidebar = ({ servers }) => {
         <Separator className="bg-zinc-200 dark:bg-zinc-700 rounded-md my-2" />
         {/* {!!textChannels?.length && ( */}
         <div className="mb-2">
-          {/* <ServerSection
+          <ServerSection
             sectionType="channels"
-            // channelType={ChannelType.TEXT}
+            // channelType={ChannelType}
             role={role}
             label="Text Channels"
-          /> */}
+          />
           <div className="space-y-[2px]">
-            {/* <ServerChannel
+            <ServerChannel
               key={textChannels?._id}
               channel={textChannels}
               role={role}
-              server={servers}
-            /> */}
+              server={server}
+            />
           </div>
         </div>
         {/* )} */}
@@ -189,7 +177,7 @@ const ServerSidebar = ({ servers }) => {
             src={image}
             className="h-8 w-8 md:h-[30px] md:w-[30px] "
           />
-          <p className="text-sm mx-2">{servers?.profile?.name}</p>
+          {/* <p className="text-sm mx-2">{servers?.profile?.name}</p> */}
         </div>
         <div className="mr-4 flex">
           <Mic className="h-4 w-4 mr-2" />

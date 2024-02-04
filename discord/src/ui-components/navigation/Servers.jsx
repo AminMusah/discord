@@ -1,29 +1,20 @@
-import { cn } from "@/lib/utils";
-import image from "../../assets/guillermo-diaz-fs6zYhHyzvI-unsplash.jpg";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 import { useNavigate, useParams } from "react-router-dom";
-import { fetchUsers } from "../../redux/apiCalls";
-import { useDispatch, useSelector } from "react-redux";
+import image from "../../assets/guillermo-diaz-fs6zYhHyzvI-unsplash.jpg";
 
 export const ServerItem = ({ id, imageUrl, name }) => {
   const params = useParams();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   const onClick = () => {
     navigate(`/server/${id}`);
   };
-
-  // if (params?.id === id) {
-  //   console.log(id);
-  // } else {
-  //   console.log(id);
-  // }
 
   return (
     <TooltipProvider>

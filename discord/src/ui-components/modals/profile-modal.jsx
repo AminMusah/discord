@@ -22,6 +22,7 @@ export const ProfileModal = () => {
   const navigation = useNavigate();
 
   const LogOut = () => {
+    onClose();
     localStorage.clear();
     navigation("/");
   };

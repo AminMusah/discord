@@ -23,24 +23,10 @@ import { useEffect, useState } from "react";
 
 const ServerHeader = ({ server, role }) => {
   const { onOpen } = useModal();
-  const [profile, setProfile] = useState("");
 
-  const dispatch = useDispatch();
+  const isAdmin = role === "ADMIN";
 
-  useEffect(() => {
-    dispatch(getProfile());
-  }, [dispatch]);
-
-  const user = useSelector((state) => state.profile.profile);
-
-  useEffect(() => {
-    setProfile(user);
-  }, [user]);
-
-  const isAdmin = profile?.members?.find((item) => item?.role === "ADMIN");
-  const isModerator = profile?.members?.find(
-    (item) => item?.role === isAdmin || "MODERATOR"
-  );
+  const isModerator = role === isAdmin || "MODERATOR";
 
   return (
     <DropdownMenu>
@@ -51,7 +37,7 @@ const ServerHeader = ({ server, role }) => {
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56 text-xs font-medium text-black dark:text-neutral-400 space-y-[2px]">
-        {isModerator?.role && (
+        {isModerator && (
           <DropdownMenuItem
             onClick={() => onOpen("invite", server)}
             className="text-indigo-600 dark:text-indigo-400 px-3 py-2 text-sm cursor-pointer"
@@ -60,7 +46,7 @@ const ServerHeader = ({ server, role }) => {
             <UserPlus className="h-4 w-4 ml-auto" />
           </DropdownMenuItem>
         )}
-        {isAdmin?.role && (
+        {isAdmin && (
           <DropdownMenuItem
             // onClick={() => onOpen("editServer", { server })}
             className="px-3 py-2 text-sm cursor-pointer"
@@ -69,7 +55,7 @@ const ServerHeader = ({ server, role }) => {
             <Settings className="h-4 w-4 ml-auto" />
           </DropdownMenuItem>
         )}
-        {isAdmin?.role && (
+        {isAdmin && (
           <DropdownMenuItem
             // onClick={() => onOpen("members", server)}
             className="px-3 py-2 text-sm cursor-pointer"
@@ -78,7 +64,7 @@ const ServerHeader = ({ server, role }) => {
             <Users className="h-4 w-4 ml-auto" />
           </DropdownMenuItem>
         )}
-        {isModerator?.role && (
+        {isModerator && (
           <DropdownMenuItem
             // onClick={() => onOpen("createChannel")}
             className="px-3 py-2 text-sm cursor-pointer"
@@ -87,8 +73,8 @@ const ServerHeader = ({ server, role }) => {
             <PlusCircle className="h-4 w-4 ml-auto" />
           </DropdownMenuItem>
         )}
-        {isModerator?.role && <DropdownMenuSeparator />}
-        {isAdmin?.role && (
+        {isModerator && <DropdownMenuSeparator />}
+        {isAdmin && (
           <DropdownMenuItem
             // onClick={() => onOpen("deleteServer", { server })}
             className="text-rose-500 px-3 py-2 text-sm cursor-pointer"
@@ -97,7 +83,7 @@ const ServerHeader = ({ server, role }) => {
             <Trash className="h-4 w-4 ml-auto" />
           </DropdownMenuItem>
         )}
-        {!isAdmin?.role && (
+        {!isAdmin && (
           <DropdownMenuItem
             // onClick={() => onOpen("leaveServer", { server })}
             className="text-rose-500 px-3 py-2 text-sm cursor-pointer"

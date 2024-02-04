@@ -9,7 +9,6 @@ import { useNavigate } from "react-router-dom";
 import Channel from "./Channel";
 
 const Server = () => {
-  const [profile, setProfile] = useState("");
   const userId = localStorage.getItem("user");
 
   const dispatch = useDispatch();
@@ -18,13 +17,13 @@ const Server = () => {
     dispatch(getProfile(userId));
   }, [dispatch]);
 
-  const user = useSelector((state) => state.profile.profile);
+  const profile = useSelector((state) => state.profile.profile);
 
   useEffect(() => {
-    setProfile(user);
-  }, [user]);
-
-  console.log({ profile });
+    if (!profile) {
+      navigate("/");
+    }
+  }, []);
 
   return (
     <div>
