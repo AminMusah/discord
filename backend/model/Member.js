@@ -8,6 +8,16 @@ const memberSchema = new mongoose.Schema(
     },
     profile: { type: mongoose.Schema.Types.ObjectId, ref: "Profile" },
     server: { type: mongoose.Schema.Types.ObjectId, ref: "Server" },
+    messages: [{ type: mongoose.Schema.Types.ObjectId, ref: "Messages" }],
+    directMessages: [
+      { type: mongoose.Schema.Types.ObjectId, ref: "DirectMessages" },
+    ],
+    conversationsInitiated: [
+      { type: mongoose.Schema.Types.ObjectId, ref: "Conversation" },
+    ],
+    conversationsReceived: [
+      { type: mongoose.Schema.Types.ObjectId, ref: "Conversation" },
+    ],
   },
   { timestamps: true }
 );

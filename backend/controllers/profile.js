@@ -2,10 +2,18 @@ const Profile = require("../model/Profile");
 
 //get all profiles
 const getProfiles = async (req, res) => {
+  const profile = req.query.profile
+    ? {
+        $or: [{ name: { $regex: req.query.profile, $options: "i" } }],
+      }
+    : null;
   try {
-    const profiles = await Profile.find({}, { password: 0 }).populate(
-      "servers"
-    );
+    const profiles = await Profile.find(profile, { password: 0 })
+      .find({
+        _id: { $ne: req.user._id },
+      })
+      .populate("servers");
+
     res.status(200).json(profiles);
   } catch (error) {
     res.status(500).send(error);

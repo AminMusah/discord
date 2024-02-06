@@ -4,7 +4,7 @@ import Sidebar from "../ui-components/navigation/Sidebar";
 import { ModalProvider } from "../ui-components/providers/modal-provider";
 import ServerId from "./ServerId";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchUsers, getProfile } from "../redux/apiCalls";
+import { getProfiles, getProfile } from "../redux/apiCalls";
 import { useNavigate } from "react-router-dom";
 import Channel from "./Channel";
 

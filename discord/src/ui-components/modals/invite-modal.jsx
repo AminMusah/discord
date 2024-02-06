@@ -13,44 +13,43 @@ import { useModal } from "@/hooks/use-modal-store";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useDispatch } from "react-redux";
-// import { useOrigin } from "@/hooks/use-origin";
+import { useOrigin } from "@/hooks/use-origin";
+import url from "../../api/url";
 
 export const InviteModal = () => {
-  const dispatch = useDispatch();
   const { onOpen, isOpen, onClose, type, data } = useModal();
-  // const origin = useOrigin();
+  const origin = useOrigin();
 
   const isModalOpen = isOpen && type === "invite";
-  const { name } = data;
+  const { server } = data;
 
   const [copied, setCopied] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // const inviteUrl = `${origin}/invite/${server?.inviteCode}`;
+  const inviteUrl = `${origin}/invite/${server?.inviteCode}`;
 
-  // const onCopy = () => {
-  //   navigator.clipboard.writeText(inviteUrl);
-  //   setCopied(true);
+  const onCopy = () => {
+    navigator.clipboard.writeText(inviteUrl);
+    setCopied(true);
 
-  //   setTimeout(() => {
-  //     setCopied(false);
-  //   }, 1000);
-  // };
+    setTimeout(() => {
+      setCopied(false);
+    }, 1000);
+  };
 
-  // const onNew = async () => {
-  //   try {
-  //     setIsLoading(true);
-  //     const response = await axios.patch(
-  //       `/api/servers/${server?.id}/invite-code`
-  //     );
-
-  //     onOpen("invite", { server: response.data });
-  //   } catch (error) {
-  //     console.log(error);
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
+  const onNew = async () => {
+    try {
+      setIsLoading(true);
+      console.log(server?._id, "server");
+      const response = await url.patch(`/server/${server?._id}/invite-code`);
+      console.log(response);
+      onOpen("invite", { server: response.data });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <Dialog open={isModalOpen} onOpenChange={onClose}>
@@ -68,23 +67,18 @@ export const InviteModal = () => {
             <Input
               disabled={isLoading}
               className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0"
-              // value={inviteUrl}
+              value={inviteUrl}
             />
-            <Button
-              disabled={isLoading}
-              // onClick={onCopy}
-              size="icon"
-            >
-              <Check className="w-4 h-4" />
-              {/* {copied ? (
+            <Button disabled={isLoading} onClick={onCopy} size="icon">
+              {copied ? (
                 <Check className="w-4 h-4" />
               ) : (
                 <Copy className="w-4 h-4" />
-              )} */}
+              )}
             </Button>
           </div>
           <Button
-            // onClick={onNew}
+            onClick={onNew}
             disabled={isLoading}
             variant="link"
             size="sm"

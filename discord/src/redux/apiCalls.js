@@ -18,7 +18,7 @@ import {
 } from "./channelSlice";
 
 // All users
-export const fetchUsers = () => async (dispatch) => {
+export const getProfiles = () => async (dispatch) => {
   try {
     dispatch(getUsersStart());
     const response = await url.get("/profiles");

@@ -9,6 +9,7 @@ import { Provider } from "react-redux";
 import store from "./redux/store";
 import Channel from "./pages/Channel";
 import Register from "./pages/Register";
+import InviteCodePage from "./pages/InviteCodePage";
 
 const router = createBrowserRouter([
   {
@@ -32,6 +33,10 @@ const router = createBrowserRouter([
   {
     path: "/auth/register",
     element: <Register />,
+  },
+  {
+    path: "/invite/:id",
+    element: <InviteCodePage />,
   },
 ]);
 

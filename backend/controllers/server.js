@@ -11,6 +11,10 @@ const createServer = async (req, res) => {
 
     const { _id } = req.user;
 
+    if (!name) {
+      return res.status(400).send({ message: "Server name missing!!" });
+    }
+
     const server = new Server({
       profile: _id,
       name,
@@ -87,4 +91,79 @@ const getServer = async (req, res) => {
   }
 };
 
-module.exports = { createServer, getServers, getServer };
+// create Invite Link
+const createInviteLink = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const { _id } = req.user;
+
+    if (!_id) {
+      return res.status(400).send({ message: "Unauthorized!!" });
+    }
+
+    if (!id) {
+      return res.status(400).send({ message: "Server ID missing!!" });
+    }
+
+    const updateLink = await Server.findByIdAndUpdate(
+      { _id: id, profile: _id },
+      {
+        inviteCode: uuidv4(),
+      },
+      {
+        new: true,
+      }
+    );
+
+    res.status(200).json(updateLink);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
+
+// create member in server
+const createMemberInServer = async (req, res) => {
+  try {
+    const { _id } = req.user;
+    const { inviteCode } = req.body;
+
+    // Validate user authentication
+    if (!_id) {
+      return res.status(401).send({ message: "Unauthorized" });
+    }
+
+    // Validate invite code
+    if (!inviteCode) {
+      return res.status(400).send({ message: "Invite code is required" });
+    }
+
+    // Find the server by invite code
+    const server = await Server.findOne({ inviteCode });
+
+    // Check if the server exists
+    if (!server) {
+      return res.status(404).send({ message: "Server not found" });
+    }
+
+    // Update the server to add the user as a member
+    await Server.findByIdAndUpdate(server._id, { $push: { members: _id } });
+
+    // Send success response
+    res
+      .status(200)
+      .json({ message: "Member added to the server successfully", server });
+  } catch (error) {
+    // Handle errors gracefully
+    console.error("Error creating member in server:", error);
+    res.status(500).send({ message: "Internal server error" });
+  }
+};
+
+module.exports = {
+  createServer,
+  getServers,
+  getServer,
+  createInviteLink,
+  createMemberInServer,
+};

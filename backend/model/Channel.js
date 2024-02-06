@@ -11,6 +11,7 @@ const channelSchema = new mongoose.Schema(
     },
     profile: { type: mongoose.Schema.Types.ObjectId, ref: "Profile" },
     server: { type: mongoose.Schema.Types.ObjectId, ref: "Server" },
+    messages: [{ type: mongoose.Schema.Types.ObjectId, ref: "Messages" }],
   },
   { timestamps: true }
 );

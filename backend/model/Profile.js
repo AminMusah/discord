@@ -19,6 +19,8 @@ const profileSchema = new mongoose.Schema(
     },
     imageUrl: {
       type: String,
+      default:
+        "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg",
     },
     servers: [{ type: mongoose.Schema.Types.ObjectId, ref: "Server" }],
     channels: [{ type: mongoose.Schema.Types.ObjectId, ref: "Channel" }],

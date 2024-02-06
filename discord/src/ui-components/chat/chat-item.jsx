@@ -108,14 +108,14 @@ export const ChatItem = ({
             </span>
           </div>
           {/* {isImage && ( */}
-          <a
+          {/* <a
             // href={fileUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="relative aspect-square rounded-md mt-2 overflow-hidden border flex items-center bg-secondary h-48 w-48"
           >
-            {/* <Image src={fileUrl} alt={content} fill className="object-cover" /> */}
-          </a>
+            <Image src={fileUrl} alt={content} fill className="object-cover" /> 
+          </a> */}
           {/* )} */}
           {/* {isPDF && ( */}
           <div className="relative flex items-center p-2 mt-2 rounded-md bg-background/10">
