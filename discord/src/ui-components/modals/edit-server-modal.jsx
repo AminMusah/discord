@@ -16,31 +16,45 @@ import { redirect, useNavigate } from "react-router-dom";
 import { Toaster, toast } from "sonner";
 import { useModal } from "../../hooks/use-modal-store";
 import url from "../../api/url";
+import { useEffect } from "react";
 
-const CreateServerModal = () => {
-  const { isOpen, onClose, type } = useModal();
+const EditServerModal = () => {
+  const { isOpen, onClose, type, data } = useModal();
 
-  const isModalOpen = isOpen && type === "createServer";
+  const isModalOpen = isOpen && type === "editServer";
 
-  const { register, handleSubmit, watch, formState } = useForm();
+  const { server } = data;
+
+  const { register, handleSubmit, watch, formState, defaultValues, setValue } =
+    useForm();
 
   const isLoading = formState.isSubmitting;
   const navigate = useNavigate();
 
+  const handleClose = () => {
+    onClose();
+  };
+
+  useEffect(() => {
+    if (server) {
+      setValue("name", server.name);
+      // setValue("imageUrl", server.imageUrl);
+    }
+  }, [server]);
+
   const onSubmit = async (data) => {
     try {
-      const server = await url.post(`/server/createserver/`, data);
-      redirect(`/server/${server.data.data._id}`);
+      const response = await url.patch(
+        `/server/updateServer/${server?._id}`,
+        data
+      );
+
       onClose();
-      toast.success(server.data.message);
+      toast.success("Server Updated!!");
     } catch (error) {
       console.log(error);
       toast.error(error.response.data);
     }
-  };
-
-  const handleClose = () => {
-    onClose();
   };
 
   return (
@@ -80,7 +94,7 @@ const CreateServerModal = () => {
                 ) : (
                   ""
                 )}
-                Create
+                Save
               </Button>
             </DialogFooter>
           </form>
@@ -90,4 +104,4 @@ const CreateServerModal = () => {
   );
 };
 
-export default CreateServerModal;
+export default EditServerModal;

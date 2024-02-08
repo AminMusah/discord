@@ -35,7 +35,7 @@ import { redirect } from "react-router-dom";
 // };
 
 const ServerSidebar = ({ server }) => {
-  const { onOpen } = useModal();
+  const { onOpen, isOpen } = useModal();
   const userId = localStorage.getItem("user");
 
   const textChannels = server?.channels?.find(

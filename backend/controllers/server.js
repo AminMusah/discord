@@ -128,7 +128,6 @@ const createMemberInServer = async (req, res) => {
     const { _id } = req.user;
     const { inviteCode } = req.body;
 
-    // Validate user authentication
     if (!_id) {
       return res.status(401).send({ message: "Unauthorized" });
     }
@@ -150,13 +149,50 @@ const createMemberInServer = async (req, res) => {
     await Server.findByIdAndUpdate(server._id, { $push: { members: _id } });
 
     // Send success response
-    res
-      .status(200)
-      .json({ message: "Member added to the server successfully", server });
+    res.status(200).json(server);
   } catch (error) {
     // Handle errors gracefully
     console.error("Error creating member in server:", error);
-    res.status(500).send({ message: "Internal server error" });
+    res.status(500).send(error);
+  }
+};
+
+// update server
+const updateServer = async (req, res) => {
+  try {
+    const { name, imageUrl } = await req.body;
+
+    const { _id } = req.user;
+
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).send({ message: "server id is required" });
+    }
+
+    // if (!imageUrl) {
+    //   return res.status(400).send({ message: "Please add an image" });
+    // }
+
+    if (!name) {
+      return res.status(400).send({ message: "Name is missing!!" });
+    }
+
+    const updateServer = await Server.findByIdAndUpdate(
+      { _id: id },
+      {
+        name,
+        imageUrl,
+      },
+      {
+        new: true,
+      }
+    );
+
+    res.status(200).json(updateServer);
+  } catch (error) {
+    console.log("[SERVER_ID_PATCH]", error);
+    res.status(500).send(error);
   }
 };
 
@@ -166,4 +202,5 @@ module.exports = {
   getServer,
   createInviteLink,
   createMemberInServer,
+  updateServer,
 };

@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 
-// import { EditServerModal } from "@/components/modals/edit-server-modal";
 import { InviteModal } from "../../ui-components/modals/invite-modal";
 import CreateServerModal from "../../ui-components/modals/create-server-modal";
 import { ProfileModal } from "../modals/profile-modal";
 import { CreateChannelModal } from "../modals/create-channel-modal";
+import EditServerModal from "../modals/edit-server-modal";
 // import { MembersModal } from "@/components/modals/members-modal";
 // import { CreateChannelModal } from "@/components/modals/create-channel-modal";
 // import { LeaveServerModal } from "@/components/modals/leave-server-modal";
@@ -30,7 +30,7 @@ export const ModalProvider = () => {
       <CreateServerModal />
       <InviteModal />
       <ProfileModal />
-      {/* <EditServerModal /> */}
+      <EditServerModal />
       {/* <MembersModal /> */}
       <CreateChannelModal />
       {/* <LeaveServerModal /> */}

@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { getProfile, getServer } from "../redux/apiCalls";
+import { getProfile, getServers } from "../redux/apiCalls";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import url from "../api/url";
@@ -13,15 +13,17 @@ const InviteCodePage = () => {
 
   useEffect(() => {
     dispatch(getProfile(userId));
+    dispatch(getServers());
   }, [dispatch]);
 
   const profile = useSelector((state) => state.profile.profile);
+  const servers = useSelector((state) => state.server.server);
 
   useEffect(() => {
     if (!profile) {
-      navigate("/");
+      return navigate("/");
     }
-  }, []);
+  }, [params.id]);
 
   if (!params.id) {
     return navigate("/");
@@ -34,10 +36,10 @@ const InviteCodePage = () => {
   });
 
   if (existingServer) {
-    return navigate(`/server/${existingServer}`);
+    return navigate(`/server/${existingServer?._id}`);
   }
 
-  const server = profile?.servers?.find((server) => {
+  const server = servers?.find((server) => {
     return server.inviteCode === params.id;
   });
 
@@ -54,9 +56,9 @@ const InviteCodePage = () => {
     }
   };
 
-  useEffect(() => {
+  if (server) {
     onNew();
-  }, []);
+  }
 
   return (
     <>

@@ -7,15 +7,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { getProfiles, getProfile } from "../redux/apiCalls";
 import { useNavigate } from "react-router-dom";
 import Channel from "./Channel";
+import { useModal } from "../hooks/use-modal-store";
 
 const Server = () => {
   const userId = localStorage.getItem("user");
+
+  const { isOpen } = useModal();
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getProfile(userId));
-  }, [dispatch]);
+  }, [dispatch, isOpen]);
 
   const profile = useSelector((state) => state.profile.profile);
 
