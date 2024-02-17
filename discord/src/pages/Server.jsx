@@ -8,6 +8,7 @@ import { getProfiles, getProfile } from "../redux/apiCalls";
 import { useNavigate } from "react-router-dom";
 import Channel from "./Channel";
 import { useModal } from "../hooks/use-modal-store";
+import url from "../api/url";
 
 const Server = () => {
   const userId = localStorage.getItem("user");

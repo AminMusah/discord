@@ -30,8 +30,13 @@ const getProfile = async (req, res) => {
           populate: {
             path: "profile",
             model: "Profile",
+            // populate: {
+            //   path: "members",
+            //   model: "Member",
+            // },
           },
         },
+
         {
           path: "servers",
         },

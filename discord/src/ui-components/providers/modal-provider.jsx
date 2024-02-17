@@ -5,7 +5,7 @@ import CreateServerModal from "../../ui-components/modals/create-server-modal";
 import { ProfileModal } from "../modals/profile-modal";
 import { CreateChannelModal } from "../modals/create-channel-modal";
 import EditServerModal from "../modals/edit-server-modal";
-// import { MembersModal } from "@/components/modals/members-modal";
+import { MembersModal } from "../modals/members-modal";
 // import { CreateChannelModal } from "@/components/modals/create-channel-modal";
 // import { LeaveServerModal } from "@/components/modals/leave-server-modal";
 // import { DeleteServerModal } from "@/components/modals/delete-server-modal";
@@ -31,7 +31,7 @@ export const ModalProvider = () => {
       <InviteModal />
       <ProfileModal />
       <EditServerModal />
-      {/* <MembersModal /> */}
+      <MembersModal />
       <CreateChannelModal />
       {/* <LeaveServerModal /> */}
       {/* <DeleteServerModal /> */}

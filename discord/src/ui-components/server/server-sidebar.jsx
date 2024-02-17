@@ -55,7 +55,7 @@ const ServerSidebar = ({ server }) => {
   // );
 
   const role = server?.members?.find(
-    (member) => member?.profile === userId
+    (member) => member?.profile?._id === userId
   )?.role;
 
   return (

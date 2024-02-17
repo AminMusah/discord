@@ -81,10 +81,23 @@ const getServers = async (req, res) => {
 const getServer = async (req, res) => {
   try {
     const { id } = req.params;
-    const server = await Server.findById(id)
-      .populate("profile")
-      .populate("channels")
-      .populate("members");
+
+    if (!id) {
+      return res.status(400).json({ error: "Server ID is required" });
+    }
+
+    const server = await Server.findById(id).populate([
+      { path: "profile" },
+      { path: "channels" },
+      {
+        path: "members",
+        populate: {
+          path: "profile",
+          model: "Profile",
+        },
+      },
+    ]);
+
     res.status(200).json(server);
   } catch (error) {
     res.status(500).send(error);
@@ -145,8 +158,18 @@ const createMemberInServer = async (req, res) => {
       return res.status(404).send({ message: "Server not found" });
     }
 
-    // Update the server to add the user as a member
-    await Server.findByIdAndUpdate(server._id, { $push: { members: _id } });
+    // Create a member for the server
+    const member = new Member({
+      profile: _id,
+      server: server._id,
+      role: "GUEST",
+    });
+
+    await member.save();
+    server.members.push(member._id);
+
+    // Save the updated server with channel and member references
+    await server.save();
 
     // Send success response
     res.status(200).json(server);
@@ -169,10 +192,6 @@ const updateServer = async (req, res) => {
     if (!id) {
       return res.status(400).send({ message: "server id is required" });
     }
-
-    // if (!imageUrl) {
-    //   return res.status(400).send({ message: "Please add an image" });
-    // }
 
     if (!name) {
       return res.status(400).send({ message: "Name is missing!!" });

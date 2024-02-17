@@ -1,10 +1,10 @@
 const Member = require("../model/Member");
+const Server = require("../model/Server");
 
 //get all memebers
 const getMembers = async (req, res) => {
   try {
     const memebers = await Member.find({}, { password: 0 });
-    console.log(memebers);
     res.status(200).json(memebers);
   } catch (error) {
     res.status(500).send(error);
@@ -24,4 +24,105 @@ const getMember = async (req, res) => {
   }
 };
 
-module.exports = { getMember, getMembers };
+// update member role
+const updateMemberRole = async (req, res) => {
+  try {
+    const { serverId } = req.query;
+    const { _id } = req.user;
+    const { role } = req.body;
+    const { id } = req.params;
+
+    if (!_id) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    if (!role) {
+      return res.status(400).json({ error: "Role is required" });
+    }
+
+    if (!serverId) {
+      return res.status(400).json({ error: "Server ID is required" });
+    }
+
+    if (!id) {
+      return res.status(400).json({ error: "Member ID is required" });
+    }
+
+    // Additional validation for role value
+    if (!["ADMIN", "MODERATOR", "GUEST"].includes(role)) {
+      return res.status(400).json({ error: "Invalid role value" });
+    }
+
+    const updatedMember = await Member.findByIdAndUpdate(
+      { _id: id },
+      { role },
+      { new: true }
+    )
+      .populate([
+        { path: "profile" },
+        {
+          path: "server",
+          populate: {
+            path: "members",
+            populate: {
+              path: "profile",
+              model: "Profile",
+            },
+          },
+        },
+      ])
+      .exec();
+
+    if (!updatedMember) {
+      return res.status(404).json({ error: "Member not found" });
+    }
+
+    res.status(200).json(updatedMember);
+  } catch (error) {
+    console.error("[MEMBERS_ID_PATCH]", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+const deleteMember = async (req, res) => {
+  try {
+    const { serverId } = req.query;
+    const { _id } = req.user;
+    const { id } = req.params;
+
+    if (!_id) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    if (!serverId) {
+      return res.status(400).json({ error: "Server ID is required" });
+    }
+
+    if (!id) {
+      return res.status(400).json({ error: "Member ID is required" });
+    }
+
+    const deletedMember = await Member.findByIdAndDelete(id)
+      .populate([
+        { path: "profile" },
+        {
+          path: "server",
+          populate: {
+            path: "members",
+            populate: {
+              path: "profile",
+              model: "Profile",
+            },
+          },
+        },
+      ])
+      .exec();
+
+    res.status(200).json(deletedMember);
+  } catch (error) {
+    console.error("[DELETE_MEMBER]", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+module.exports = { getMember, getMembers, updateMemberRole, deleteMember };

@@ -26,7 +26,7 @@ const ServerHeader = ({ server, role }) => {
 
   const isAdmin = role === "ADMIN";
 
-  const isModerator = role === isAdmin || role === "MODERATOR";
+  const isModerator = role === "ADMIN" || role === "MODERATOR";
 
   return (
     <DropdownMenu>
@@ -57,7 +57,7 @@ const ServerHeader = ({ server, role }) => {
         )}
         {isAdmin && (
           <DropdownMenuItem
-            // onClick={() => onOpen("members", server)}
+            onClick={() => onOpen("members", { server })}
             className="px-3 py-2 text-sm cursor-pointer"
           >
             Manage Members

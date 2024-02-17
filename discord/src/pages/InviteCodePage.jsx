@@ -29,6 +29,8 @@ const InviteCodePage = () => {
     return navigate("/");
   }
 
+  console.log(profile);
+
   const existingServer = profile?.servers?.find((server) => {
     return (
       server.inviteCode === params.id && server.members.includes(server.profile)
