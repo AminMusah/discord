@@ -34,6 +34,12 @@ import { redirect } from "react-router-dom";
 //   [MemberRole.ADMIN]: <ShieldAlert className="h-4 w-4 mr-2 text-rose-500" />,
 // };
 
+const typeOfChannel = {
+  text: "TEXT",
+  audio: "AUDIO",
+  video: "VIDEO",
+};
+
 const ServerSidebar = ({ server }) => {
   const { onOpen, isOpen } = useModal();
   const userId = localStorage.getItem("user");
@@ -109,7 +115,7 @@ const ServerSidebar = ({ server }) => {
         <div className="mb-2">
           <ServerSection
             sectionType="channels"
-            // channelType={ChannelType}
+            channelType={typeOfChannel}
             role={role}
             label="Text Channels"
           />

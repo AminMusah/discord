@@ -185,8 +185,6 @@ const updateServer = async (req, res) => {
   try {
     const { name, imageUrl } = await req.body;
 
-    const { _id } = req.user;
-
     const { id } = req.params;
 
     if (!id) {
