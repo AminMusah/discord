@@ -1,21 +1,31 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { ServerItem } from "./servers";
-import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import ServerAction from "./ServerAction";
-import { UserAvatar } from "../user-avatar";
-import image from "../../assets/guillermo-diaz-fs6zYhHyzvI-unsplash.jpg";
-import url from "../../api/url";
-import { useModal } from "../../hooks/use-modal-store";
+import { Separator } from "@/components/ui/separator";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getProfile } from "../../redux/apiCalls";
+import { useModal } from "../../hooks/use-modal-store";
+import { getMemberServers } from "../../redux/apiCalls";
+import ServerAction from "./ServerAction";
+import { ServerItem } from "./servers";
 
 const Sidebar = ({ profile }) => {
+  const { isOpen } = useModal();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getMemberServers());
+  }, [dispatch, isOpen]);
+
+  const servers = useSelector((state) => state.servers.servers);
+
+  useEffect(() => {
+    if (!profile) {
+      navigate("/");
+    }
+  }, []);
   return (
     <div className="space-y-4 flex flex-col items-center h-full text-primary w-full dark:bg-[#1E1F22] bg-[#E3E5E8] py-3">
       <ScrollArea className="flex-1 w-full">
-        {profile?.servers?.map((server) => (
+        {servers?.map((server) => (
           <div key={server?._id} className="mb-4">
             <ServerItem
               id={server?._id}

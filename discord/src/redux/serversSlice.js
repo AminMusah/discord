@@ -1,23 +1,21 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-export const serverSlice = createSlice({
-  name: "server",
+export const serversSlice = createSlice({
+  name: "servers",
   initialState: {
-    server: [],
     servers: [],
     status: "idle",
     error: null,
   },
   reducers: {
-    getServerStart: (state) => {
+    getServersStart: (state) => {
       state.status = "loading";
     },
-    getServerSuccess: (state, action) => {
+    getServersSuccess: (state, action) => {
       state.status = "succeeded";
-      state.server = action.payload;
       state.servers = action.payload;
     },
-    getServerFailure: (state, action) => {
+    getServersFailure: (state, action) => {
       state.status = "failed";
       state.error = action.payload;
     },
@@ -25,7 +23,7 @@ export const serverSlice = createSlice({
 });
 
 // Export the actions
-export const { getServerStart, getServerSuccess, getServerFailure } =
-  serverSlice.actions;
+export const { getServersStart, getServersSuccess, getServersFailure } =
+  serversSlice.actions;
 
-export default serverSlice.reducer;
+export default serversSlice.reducer;

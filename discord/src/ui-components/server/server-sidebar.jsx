@@ -19,20 +19,7 @@ import { ServerSection } from "./server-section";
 import { ServerChannel } from "./server-channel";
 import { useModal } from "../../hooks/use-modal-store";
 import { redirect } from "react-router-dom";
-
-// const iconMap = {
-//   [ChannelType.TEXT]: <Hash className="mr-2 h-4 w-4" />,
-//   [ChannelType.AUDIO]: <Mic className="mr-2 h-4 w-4" />,
-//   [ChannelType.VIDEO]: <Video className="mr-2 h-4 w-4" />,
-// };
-
-// const roleIconMap = {
-//   [MemberRole.GUEST]: null,
-//   [MemberRole.MODERATOR]: (
-//     <ShieldCheck className="h-4 w-4 mr-2 text-indigo-500" />
-//   ),
-//   [MemberRole.ADMIN]: <ShieldAlert className="h-4 w-4 mr-2 text-rose-500" />,
-// };
+import { ServerMember } from "./server-member";
 
 const typeOfChannel = {
   text: "TEXT",
@@ -40,25 +27,25 @@ const typeOfChannel = {
   video: "VIDEO",
 };
 
-const ServerSidebar = ({ server }) => {
+const ServerSidebar = ({ server, profile }) => {
   const { onOpen, isOpen } = useModal();
   const userId = localStorage.getItem("user");
 
-  const textChannels = server?.channels?.find(
+  const textChannels = server?.channels?.filter(
     (channel) => channel?.type === "TEXT"
   );
 
-  // const audioChannels = servers?.channels.filter(
-  //   (channel) => channel?.type === "AUDIO"
-  // );
+  const audioChannels = server?.channels?.filter(
+    (channel) => channel?.type === "AUDIO"
+  );
 
-  // const videoChannels = servers?.channels.filter(
-  //   (channel) => channel?.type === "VIDEO"
-  // );
+  const videoChannels = server?.channels?.filter(
+    (channel) => channel?.type === "VIDEO"
+  );
 
-  // const member = servers?.members?.filter(
-  //   (member) => member?.profile !== user._id
-  // );
+  const member = server?.members?.filter(
+    (member) => member?.profile?._id !== userId
+  );
 
   const role = server?.members?.find(
     (member) => member?.profile?._id === userId
@@ -68,114 +55,80 @@ const ServerSidebar = ({ server }) => {
     <div className="flex flex-col h-full text-primary w-full dark:bg-[#2B2D31] bg-[#F2F3F5]">
       <ServerHeader server={server} role={role} />
       <ScrollArea className="flex-1 px-3">
-        {/* <div className="mt-2">
-          <ServerSearch
-            data={[
-              {
-                label: "Text Channels",
-                type: "channel",
-                data: textChannels?.map((channel) => ({
-                  id: channel.id,
-                  name: channel.name,
-                  icon: iconMap[channel.type],
-                })),
-              },
-              {
-                label: "Voice Channels",
-                type: "channel",
-                data: audioChannels?.map((channel) => ({
-                  id: channel.id,
-                  name: channel.name,
-                  icon: iconMap[channel.type],
-                })),
-              },
-              {
-                label: "Video Channels",
-                type: "channel",
-                data: videoChannels?.map((channel) => ({
-                  id: channel.id,
-                  name: channel.name,
-                  icon: iconMap[channel.type],
-                })),
-              },
-              {
-                label: "Members",
-                type: "member",
-                data: members?.map((member) => ({
-                  id: member.id,
-                  name: member.profile.name,
-                  icon: roleIconMap[member.role],
-                })),
-              },
-            ]}
-          />
-        </div> */}
         <Separator className="bg-zinc-200 dark:bg-zinc-700 rounded-md my-2" />
-        {/* {!!textChannels?.length && ( */}
         <div className="mb-2">
           <ServerSection
             sectionType="channels"
             channelType={typeOfChannel}
             role={role}
             label="Text Channels"
+            server={server}
           />
           <div className="space-y-[2px]">
-            <ServerChannel
-              key={textChannels?._id}
-              channel={textChannels}
-              role={role}
-              server={server}
-            />
+            {textChannels?.map((channel) => (
+              <ServerChannel
+                key={channel?._id}
+                channel={channel}
+                role={role}
+                server={server}
+              />
+            ))}
           </div>
         </div>
-        {/* )} */}
-        {/* {!!audioChannels?.length && ( */}
+
         <div className="mb-2">
-          {/* <ServerSection
+          <ServerSection
             sectionType="channels"
-            // channelType={ChannelType.AUDIO}
+            channelType={typeOfChannel}
             role={role}
             label="Voice Channels"
-          /> */}
+            server={server}
+          />
           <div className="space-y-[2px]">
-            {/* <ServerChannel
-              channel={audioChannels}
-              role={role}
-              server={servers}
-            /> */}
+            {audioChannels?.map((channel) => (
+              <ServerChannel
+                key={channel._id}
+                channel={channel}
+                role={role}
+                server={server}
+              />
+            ))}
           </div>
         </div>
-        {/* )} */}
-        {/* {!!videoChannels?.length && ( */}
+
         <div className="mb-2">
-          {/* <ServerSection
+          <ServerSection
             sectionType="channels"
-            // channelType={ChannelType.VIDEO}
+            channelType={typeOfChannel}
             role={role}
             label="Video Channels"
-          /> */}
+            server={server}
+          />
           <div className="space-y-[2px]">
-            {/* <ServerChannel
-              channel={videoChannels}
-              role={role}
-              server={servers}
-            /> */}
+            {videoChannels?.map((channel) => (
+              <ServerChannel
+                key={channel?._id}
+                channel={channel}
+                role={role}
+                server={server}
+              />
+            ))}
           </div>
         </div>
-        {/* )} */}
-        {/* {!!members?.length && ( */}
+
         <div className="mb-2">
-          {/* <ServerSection
+          <ServerSection
             sectionType="members"
             role={role}
             label="Members"
-            server={servers}
-          /> */}
+            server={server}
+          />
           <div className="space-y-[2px]">
-            {/* <ServerMember  member={member} server={server} /> */}
+            {member?.map((member) => (
+              <ServerMember key={member._id} member={member} server={server} />
+            ))}
           </div>
         </div>
-        {/* )} */}
       </ScrollArea>
       <div className="flex justify-between items-center w-full absolute bottom-2 mx-2">
         <div className="flex">
@@ -183,7 +136,7 @@ const ServerSidebar = ({ server }) => {
             src={image}
             className="h-8 w-8 md:h-[30px] md:w-[30px] "
           />
-          {/* <p className="text-sm mx-2">{servers?.profile?.name}</p> */}
+          <p className="text-sm mx-2">{profile?.name}</p>
         </div>
         <div className="mr-4 flex">
           <Mic className="h-4 w-4 mr-2" />

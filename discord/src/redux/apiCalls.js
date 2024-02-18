@@ -7,6 +7,11 @@ import {
   getServerSuccess,
 } from "./serverSlice";
 import {
+  getServersFailure,
+  getServersStart,
+  getServersSuccess,
+} from "./serversSlice";
+import {
   getProfileFailure,
   getProfileStart,
   getProfileSuccess,
@@ -48,6 +53,17 @@ export const getServers = () => async (dispatch) => {
     dispatch(getServerSuccess(response.data));
   } catch (error) {
     dispatch(getServerFailure(error.message));
+  }
+};
+
+// All servers members belong to
+export const getMemberServers = () => async (dispatch) => {
+  try {
+    dispatch(getServersStart());
+    const response = await url.get(`/server/servers`);
+    dispatch(getServersSuccess(response.data));
+  } catch (error) {
+    dispatch(getServersFailure(error.message));
   }
 };
 

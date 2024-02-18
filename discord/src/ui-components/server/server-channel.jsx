@@ -1,4 +1,4 @@
-import { Edit, Hash, Lock, Mic, Trash, Video } from "lucide-react";
+import { Edit, Hash, HashIcon, Lock, Mic, Trash, Video } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { useParams, redirect, useNavigate } from "react-router-dom";
@@ -12,18 +12,22 @@ import {
 import { useModal } from "../../hooks/use-modal-store";
 import { useEffect } from "react";
 
-// const iconMap = {
-//   [ChannelType.TEXT]: Hash,
-//   [ChannelType.AUDIO]: Mic,
-//   [ChannelType.VIDEO]: Video,
-// };
-
 export const ServerChannel = ({ channel, role, server }) => {
   const { onOpen } = useModal();
   const params = useParams();
   const navigate = useNavigate();
 
-  // const Icon = iconMap[channel.type];
+  const IconMap = {
+    TEXT: (
+      <Hash className="flex-shrink-0 w-5 h-5 text-zinc-500 dark:text-zinc-400" />
+    ),
+    AUDIO: (
+      <Mic className="flex-shrink-0 w-5 h-5 text-zinc-500 dark:text-zinc-400" />
+    ),
+    VIDEO: (
+      <Video className="flex-shrink-0 w-5 h-5 text-zinc-500 dark:text-zinc-400" />
+    ),
+  };
 
   const onClick = () => {
     // Check if both server and channel are available before navigating
@@ -32,10 +36,10 @@ export const ServerChannel = ({ channel, role, server }) => {
     }
   };
 
-  // const onAction = (e) => {
-  //   e.stopPropagation();
-  //   onOpen(action, { channel, server });
-  // };
+  const onAction = (e, action) => {
+    e.stopPropagation();
+    onOpen(action, { channel, server });
+  };
 
   return (
     <button
@@ -45,7 +49,7 @@ export const ServerChannel = ({ channel, role, server }) => {
         params?.channelId === channel?.id && "bg-zinc-700/20 dark:bg-zinc-700"
       )}
     >
-      {/* <Icon className="flex-shrink-0 w-5 h-5 text-zinc-500 dark:text-zinc-400" /> */}
+      {IconMap[channel?.type]}
       <p
         className={cn(
           "line-clamp-1 font-semibold text-sm text-zinc-500 group-hover:text-zinc-600 dark:text-zinc-400 dark:group-hover:text-zinc-300 transition",

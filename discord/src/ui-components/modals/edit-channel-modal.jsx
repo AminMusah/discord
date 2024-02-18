@@ -24,12 +24,12 @@ import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 import url from "../../api/url";
 
-export const CreateChannelModal = () => {
+export const EditChannelModal = () => {
   const { isOpen, onClose, type, data } = useModal();
   const [channelInput, setChannelInput] = useState("");
 
-  const isModalOpen = isOpen && type === "createChannel";
-  const { channelType, server } = data;
+  const isModalOpen = isOpen && type === "editChannel";
+  const { channel, server } = data;
   const { register, handleSubmit, watch, formState, setValue } = useForm();
 
   const typeOfChannel = {
@@ -48,14 +48,12 @@ export const CreateChannelModal = () => {
   const handChannelTypeChange = (value) => {
     setChannelInput(value);
   };
-
   useEffect(() => {
-    if (channelInput !== undefined) {
-      setValue("type", channelInput);
-    } else {
-      setValue("type", typeOfChannel.text);
+    if (channel) {
+      setValue("name", channel?.name);
+      setValue("type", channel?.type);
     }
-  }, [channelInput]);
+  }, [channel]);
 
   const isLoading = formState.isSubmitting;
 
@@ -65,13 +63,12 @@ export const CreateChannelModal = () => {
         serverId: server?._id,
       }).toString();
 
-      const endpoint = `/channel?${queryParams}`;
+      const endpoint = `/channel/${channel?._id}?${queryParams}`;
 
-      const response = await url.post(endpoint, data);
+      const response = await url.patch(endpoint, data);
       if (!response.data) {
         throw new Error("Failed to creat channel");
       }
-      console.log(response);
       onClose();
     } catch (error) {
       console.log(error);
@@ -87,7 +84,7 @@ export const CreateChannelModal = () => {
       <DialogContent className="bg-white text-black p-0 overflow-hidden">
         <DialogHeader className="pt-8 px-6">
           <DialogTitle className="text-2xl text-center font-bold">
-            Create Channel
+            Edit Channel
           </DialogTitle>
         </DialogHeader>
 
@@ -124,6 +121,7 @@ export const CreateChannelModal = () => {
                 onValueChange={(value) => {
                   handChannelTypeChange(value);
                 }}
+                defaultValue={channel?.type}
               >
                 <SelectTrigger className="bg-zinc-300/50 border-0 focus:ring-0 text-black ring-offset-0 focus:ring-offset-0 capitalize outline-none">
                   <SelectValue placeholder="Select a channel type" />

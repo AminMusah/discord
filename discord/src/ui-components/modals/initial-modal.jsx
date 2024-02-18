@@ -29,7 +29,8 @@ export const InitialModal = () => {
 
   const onSubmit = async (data) => {
     try {
-      const server = await url.post(`/createserver/`, data);
+      const server = await url.post(`/server/createserver/`, data);
+      console.log(server);
       navigate(`/server/${server.data.data._id}`);
       toast.success(server.data.message);
     } catch (error) {

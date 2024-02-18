@@ -22,8 +22,6 @@ const createServer = async (req, res) => {
       inviteCode: uuidv4(),
     });
 
-    // await server.save();
-
     //Create a default channel for the server
     const defaultChannel = new Channel({
       profile: _id,
@@ -61,7 +59,7 @@ const createServer = async (req, res) => {
     res.status(200).json({ message: "server created!", data: server });
   } catch (error) {
     console.log(error);
-    res.status(500).send(error);
+    res.status(500).send({ message: "Error!", data: error });
   }
 };
 
@@ -213,6 +211,85 @@ const updateServer = async (req, res) => {
   }
 };
 
+// fetch servers that members belong to
+const fetchServers = async (req, res) => {
+  try {
+    const { _id } = req.user;
+
+    // Find members with the specified profile ID
+    const members = await Member.find({ profile: _id });
+
+    // Extract the server IDs from the members
+    const serverIds = members.map((member) => member.server);
+
+    // Find servers using the extracted server IDs
+    const servers = await Server.find({ _id: { $in: serverIds } }).populate([
+      { path: "profile" },
+      { path: "channels" },
+      {
+        path: "members",
+        populate: {
+          path: "profile",
+          model: "Profile",
+        },
+      },
+    ]);
+
+    res.status(200).json(servers);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
+
+// leave server
+
+const leaveServer = async (req, res) => {
+  try {
+    const { serverId } = req.params;
+    const { _id } = req.user;
+
+    if (!serverId) {
+      return res.status(400).send("Server ID missing");
+    }
+
+    // Find the server by ID and update the members array
+    const leaveServer = await Server.findByIdAndUpdate(
+      serverId,
+      {
+        $pull: { members: { _id } }, // Remove the profile from the members array
+      },
+      { new: true } // To return the updated server document
+    );
+
+    return res.status(200).json(leaveServer);
+  } catch (error) {
+    console.error("[SERVER_ID_LEAVE]", error);
+    return res.status(500).send("Internal Error");
+  }
+};
+
+// delete server
+const deleteServer = async (req, res) => {
+  try {
+    const { serverId } = req.params;
+
+    if (!serverId) {
+      return res.status(400).send("Server ID missing");
+    }
+
+    const deletedServer = await Server.findByIdAndDelete(serverId);
+
+    if (!deletedServer) {
+      return res.status(404).json({ error: "Server not found" });
+    }
+
+    res.status(200).json({ message: "Server deleted successfully" });
+  } catch (error) {
+    console.error("[SERVER_ID_DELETE]", error);
+    return res.status(500).send("Internal Error");
+  }
+};
+
 module.exports = {
   createServer,
   getServers,
@@ -220,4 +297,7 @@ module.exports = {
   createInviteLink,
   createMemberInServer,
   updateServer,
+  fetchServers,
+  leaveServer,
+  deleteServer,
 };

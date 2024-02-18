@@ -24,7 +24,7 @@ const ServerId = ({ profile }) => {
   return (
     <div>
       <div className="md:flex h-full w-60 z-20 flex-col fixed inset-y-0">
-        <ServerSidebar server={server} />
+        <ServerSidebar server={server} profile={profile} />
       </div>
       <div className="h-full md:pl-60">
         {" "}

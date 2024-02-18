@@ -6,11 +6,10 @@ import { ProfileModal } from "../modals/profile-modal";
 import { CreateChannelModal } from "../modals/create-channel-modal";
 import EditServerModal from "../modals/edit-server-modal";
 import { MembersModal } from "../modals/members-modal";
-// import { CreateChannelModal } from "@/components/modals/create-channel-modal";
-// import { LeaveServerModal } from "@/components/modals/leave-server-modal";
-// import { DeleteServerModal } from "@/components/modals/delete-server-modal";
-// import { DeleteChannelModal } from "@/components/modals/delete-channel-modal";
-// import { EditChannelModal } from "@/components/modals/edit-channel-modal";
+import { LeaveServerModal } from "../modals/leave-server-modal";
+import { DeleteServerModal } from "../modals/delete-server-modal";
+import { DeleteChannelModal } from "../modals/delete-channel-modal";
+import { EditChannelModal } from "../modals/edit-channel-modal";
 // import { MessageFileModal } from "@/components/modals/message-file-modal";
 // import { DeleteMessageModal } from "@/components/modals/delete-message-modal";
 
@@ -33,10 +32,10 @@ export const ModalProvider = () => {
       <EditServerModal />
       <MembersModal />
       <CreateChannelModal />
-      {/* <LeaveServerModal /> */}
-      {/* <DeleteServerModal /> */}
-      {/* <DeleteChannelModal /> */}
-      {/* <EditChannelModal /> */}
+      <LeaveServerModal />
+      <DeleteServerModal />
+      <DeleteChannelModal />
+      <EditChannelModal />
       {/* <MessageFileModal /> */}
       {/* <DeleteMessageModal /> */}
     </>
