@@ -6,6 +6,7 @@ import Channel from "./Channel";
 import ServerSidebar from "../ui-components/server/server-sidebar";
 import { useDispatch, useSelector } from "react-redux";
 import { getProfile, getServer } from "../redux/apiCalls";
+import MemberIdPage from "./Conversation";
 
 const ServerId = ({ profile }) => {
   const params = useParams();
@@ -21,14 +22,19 @@ const ServerId = ({ profile }) => {
 
   const server = useSelector((state) => state.server.server);
 
+  const { channelId, memberId } = params;
+
   return (
     <div>
       <div className="md:flex h-full w-60 z-20 flex-col fixed inset-y-0">
         <ServerSidebar server={server} profile={profile} />
       </div>
       <div className="h-full md:pl-60">
-        {" "}
-        <Channel server={server} profile={profile} />
+        {channelId ? (
+          <Channel server={server} profile={profile} />
+        ) : (
+          <MemberIdPage server={server} profile={profile} />
+        )}
       </div>
     </div>
   );

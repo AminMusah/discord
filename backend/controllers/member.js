@@ -16,7 +16,7 @@ const getMember = async (req, res) => {
   try {
     const memeber = await Member.findById(req.params.id)
       .sort({ createdAt: 1 })
-      .populate("profiles");
+      .populate("profile");
     const { password, ...others } = memeber._doc;
     res.status(200).json(others);
   } catch (error) {
@@ -125,4 +125,27 @@ const deleteMember = async (req, res) => {
   }
 };
 
-module.exports = { getMember, getMembers, updateMemberRole, deleteMember };
+// find the current member to start a conversation
+const getCurrentMember = async (req, res) => {
+  try {
+    const { serverId } = req.query;
+    const { _id } = req.user;
+
+    const currentMember = await Member.findOne({
+      server: serverId,
+      profile: _id,
+    }).populate("profile");
+    res.status(200).json(currentMember);
+  } catch (error) {
+    console.error("Error finding current member:", error);
+    res.status(500).json({ error: "Error finding current member" });
+  }
+};
+
+module.exports = {
+  getMember,
+  getMembers,
+  updateMemberRole,
+  deleteMember,
+  getCurrentMember,
+};

@@ -10,6 +10,7 @@ import store from "./redux/store";
 import Channel from "./pages/Channel";
 import Register from "./pages/Register";
 import InviteCodePage from "./pages/InviteCodePage";
+import MemberIdPage from "./pages/Conversation";
 
 const router = createBrowserRouter([
   {
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
       {
         path: "channel/:channelId",
         element: <Channel />,
+      },
+      {
+        path: "conversation/:memberId",
+        element: <MemberIdPage />,
       },
     ],
   },

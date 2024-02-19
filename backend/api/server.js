@@ -7,6 +7,7 @@ const serverRoute = require("../routes/server");
 const channelRoute = require("../routes/channel");
 const memberRoute = require("../routes/member");
 const messageRoute = require("../routes/directMessage");
+const conversationRoute = require("../routes/conversation");
 
 const app = express();
 require("../db/connect");
@@ -25,6 +26,7 @@ app.use("/api/", serverRoute);
 app.use("/api/", channelRoute);
 app.use("/api/", memberRoute);
 app.use("/api/", messageRoute);
+app.use("/api/", conversationRoute);
 
 const PORT = process.env.PORT || 8000;
 

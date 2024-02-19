@@ -18,7 +18,7 @@ export const ServerMember = ({ member, server }) => {
   const params = useParams();
 
   const onClick = () => {
-    navigate(`/server/${params?.serverId}/conversations/${member?._id}`);
+    navigate(`/server/${params?.id}/conversation/${member?._id}`);
   };
 
   return (
