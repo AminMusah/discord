@@ -27,12 +27,12 @@ export const ServerSection = ({
         <TooltipProvider>
           <Tooltip delayDuration={50}>
             <TooltipTrigger>
-              <button
+              <span
                 onClick={() => onOpen("createChannel", { server })}
                 className="text-zinc-500 hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300 transition"
               >
                 <Plus className="h-4 w-4" />
-              </button>
+              </span>
             </TooltipTrigger>
             <TooltipContent side="top" align="center">
               <p className="font-semibold text-sm capitalize">{label}</p>
@@ -44,12 +44,12 @@ export const ServerSection = ({
         <TooltipProvider>
           <Tooltip delayDuration={50}>
             <TooltipTrigger>
-              <button
+              <span
                 // onClick={() => onOpen("members", { server })}
                 className="text-zinc-500 hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300 transition"
               >
                 <Settings className="h-4 w-4" />
-              </button>
+              </span>
             </TooltipTrigger>
             <TooltipContent side="top" align="center">
               <p className="font-semibold text-sm capitalize">{label}</p>

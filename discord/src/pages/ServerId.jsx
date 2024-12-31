@@ -7,10 +7,12 @@ import ServerSidebar from "../ui-components/server/server-sidebar";
 import { useDispatch, useSelector } from "react-redux";
 import { getProfile, getServer } from "../redux/apiCalls";
 import MemberIdPage from "./Conversation";
+import { useModal } from "../hooks/use-modal-store";
 
 const ServerId = ({ profile }) => {
   const params = useParams();
   const dispatch = useDispatch();
+  const { isOpen } = useModal();
 
   useEffect(() => {
     try {
@@ -18,7 +20,11 @@ const ServerId = ({ profile }) => {
     } catch (error) {
       console.error("Error fetching server:", error);
     }
-  }, [dispatch, params?.id]);
+  }, [dispatch, params?.id, isOpen]);
+
+  useEffect(() => {
+    console.log("hello");
+  }, [isOpen]);
 
   const server = useSelector((state) => state.server.server);
 

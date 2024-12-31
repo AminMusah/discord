@@ -13,7 +13,7 @@ import { useModal } from "../../hooks/use-modal-store";
 import { useEffect } from "react";
 
 export const ServerChannel = ({ channel, role, server }) => {
-  const { onOpen } = useModal();
+  const { onOpen, isOpen } = useModal();
   const params = useParams();
   const navigate = useNavigate();
 
