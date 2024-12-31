@@ -11,6 +11,7 @@ import Channel from "./pages/Channel";
 import Register from "./pages/Register";
 import InviteCodePage from "./pages/InviteCodePage";
 import MemberIdPage from "./pages/Conversation";
+import { Toaster } from "sonner";
 
 const router = createBrowserRouter([
   {
@@ -49,6 +50,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <Provider store={store}>
       <RouterProvider router={router} />
+      <Toaster position="top-center" richColors />
     </Provider>
   </React.StrictMode>
 );

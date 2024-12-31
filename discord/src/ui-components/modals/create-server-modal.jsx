@@ -16,6 +16,7 @@ import { redirect, useNavigate } from "react-router-dom";
 import { Toaster, toast } from "sonner";
 import { useModal } from "../../hooks/use-modal-store";
 import url from "../../api/url";
+import ImageUpload from "../ImageUpload";
 
 const CreateServerModal = () => {
   const { isOpen, onClose, type } = useModal();
@@ -56,6 +57,7 @@ const CreateServerModal = () => {
             always change it later.
           </DialogDescription>
         </DialogHeader>
+        <ImageUpload />
         <div className="mt-8 space-y-8 px-6">
           <form action="" className="group" onSubmit={handleSubmit(onSubmit)}>
             <div className="mb-6">
