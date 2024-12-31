@@ -17,26 +17,35 @@ import { Toaster, toast } from "sonner";
 import { useModal } from "../../hooks/use-modal-store";
 import url from "../../api/url";
 import ImageUpload from "../ImageUpload";
+import { useState } from "react";
 
 const CreateServerModal = () => {
+  const [file, setFile] = useState("");
+  const [name, setName] = useState("");
+  const [loading, setLoading] = useState("");
+
   const { isOpen, onClose, type } = useModal();
 
   const isModalOpen = isOpen && type === "createServer";
 
-  const { register, handleSubmit, watch, formState } = useForm();
-
-  const isLoading = formState.isSubmitting;
   const navigate = useNavigate();
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (name, imgUrl) => {
     try {
-      const server = await url.post(`/server/createserver/`, data);
+      setLoading(true);
+
+      const server = await url.post(`/server/createserver/`, {
+        name: name,
+        imageUrl: imgUrl,
+      });
       redirect(`/server/${server.data.data._id}`);
       onClose();
       toast.success(server.data.message);
     } catch (error) {
       console.log(error);
       toast.error(error.response.data);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -57,15 +66,22 @@ const CreateServerModal = () => {
             always change it later.
           </DialogDescription>
         </DialogHeader>
-        <ImageUpload />
+        <ImageUpload setFile={setFile} />
         <div className="mt-8 space-y-8 px-6">
-          <form action="" className="group" onSubmit={handleSubmit(onSubmit)}>
+          <form
+            action=""
+            className="group"
+            onSubmit={(e) => {
+              e.preventDefault();
+              onSubmit(name, file);
+            }}
+          >
             <div className="mb-6">
               <label className="mb-2 block text-sm text-gray-600">
                 Server Name
               </label>
               <input
-                {...register("name")}
+                onChange={(e) => setName(e.target.value)}
                 id="name"
                 placeholder="Enter Server Name"
                 className="w-full rounded-md border border-gray-300 px-3 py-2.5 placeholder-gray-300 shadow shadow-gray-100 focus:border-gray-500 focus:outline-none valid:[&:not(:placeholder-shown)]:border-green-500 [&:not(:placeholder-shown):not(:focus):invalid~span]:block invalid:[&:not(:placeholder-shown):not(:focus)]:border-red-400"
@@ -76,8 +92,8 @@ const CreateServerModal = () => {
               </span> */}
             </div>
             <DialogFooter className=" py-4">
-              <Button disabled={isLoading} className="w-full">
-                {isLoading ? (
+              <Button disabled={loading} className="w-full">
+                {loading ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 ) : (
                   ""

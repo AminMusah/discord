@@ -34,7 +34,12 @@ export const ServerItem = ({ id, imageUrl, name }) => {
                 params?.id === id && "bg-primary/10 text-primary rounded-[16px]"
               )}
             >
-              <img src={imageUrl || image} alt="Channel" />
+              <img
+                src={imageUrl || image}
+                alt="Channel"
+                className="object-cover w-full"
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 1200px"
+              />
             </div>
           </span>
         </TooltipTrigger>
