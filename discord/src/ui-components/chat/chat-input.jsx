@@ -3,42 +3,70 @@ import { useForm } from "react-hook-form";
 import { Plus } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useModal } from "@/hooks/use-modal-store";
+import useSocket from "../../hooks/useSocketHook";
+import { useState } from "react";
 // import { EmojiPicker } from "@/components/emoji-picker";
+import url from "../../api/url";
 
 export const ChatInput = ({ apiUrl, query, name, type }) => {
   const { onOpen } = useModal();
+  const [loading, setLoading] = useState(false);
+  const { connected, messages, sendMessage } = useSocket(
+    "http://localhost:6060"
+  );
+  const [input, setInput] = useState("");
 
-  // const isLoading = form.formState.isSubmitting;
+  const handleSendMessage = () => {
+    if (input.trim()) {
+      sendMessage(input);
+      setInput("");
+    }
+  };
 
-  // const onSubmit = async (values: z.infer<typeof formSchema>) => {
-  //   try {
-  //     const url = qs.stringifyUrl({
-  //       url: apiUrl,
-  //       query,
-  //     });
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault(); // Prevent default behavior (like form submission)
+      handleSendMessage();
+      submit(input);
+    }
+  };
 
-  //     await axios.post(url, values);
+  const submit = async (value) => {
+    try {
+      setLoading(true);
+      const queryParams = new URLSearchParams({
+        serverId: query.serverId,
+        channelId: query.channelId,
+      }).toString();
 
-  //     form.reset();
-  //     router.refresh();
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
+      const endpoint = `/${apiUrl}?${queryParams}`;
+
+      await url.post(endpoint, { content: value });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <form className="">
       <div className="relative p-4 pb-6">
         <button
-          // onClick={() => onOpen("messageFile", { apiUrl, query })}
+          onClick={(e) => {
+            // onOpen("messageFile", { apiUrl, query });
+          }}
           className="absolute top-7 left-8 h-[24px] w-[24px] bg-zinc-500 dark:bg-zinc-400 hover:bg-zinc-600 dark:hover:bg-zinc-300 transition rounded-full p-1 flex items-center justify-center"
         >
           <Plus className="text-white dark:text-[#313338]" />
         </button>
         <Input
-          // disabled={isLoading}
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={handleKeyDown}
+          disabled={loading}
           className="px-14 py-6 bg-zinc-200/90 dark:bg-zinc-700/75 border-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-zinc-600 dark:text-zinc-200"
-          // placeholder={`Message ${type === "conversation" ? name : "#" + name}`}
+          placeholder={`Message ${type === "conversation" ? name : "#" + name}`}
         />
         <div className="absolute top-7 right-8">
           {/* <EmojiPicker

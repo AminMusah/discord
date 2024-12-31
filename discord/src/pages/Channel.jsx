@@ -17,11 +17,13 @@ const Channel = ({ server, profile }) => {
     (channel) => channel?._id === channelId
   );
 
+  console.log(serverChannel, channelId, "here");
+
   return (
-    <div className="bg-white dark:bg-[#313338] flex flex-col h-full ">
+    <div className="bg-white dark:bg-[#313338] flex flex-col h-screen ">
       <ChatHeader
         name={serverChannel?.name}
-        // serverId={servers?._id}
+        serverId={server?._id}
         type="channel"
       />
       {serverChannel?.type === "TEXT" && (
@@ -41,13 +43,13 @@ const Channel = ({ server, profile }) => {
             paramValue={serverChannel?.id}
           />
           <ChatInput
-          // name={channel.name}
-          // type="channel"
-          // apiUrl="/api/socket/messages"
-          // query={{
-          //   channelId: channel.id,
-          //   serverId: channel.serverId,
-          // }}
+            name={serverChannel.name}
+            type="channel"
+            apiUrl="/messages"
+            query={{
+              channelId: serverChannel._id,
+              serverId: server._id,
+            }}
           />
         </>
       )}

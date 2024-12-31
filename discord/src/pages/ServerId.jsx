@@ -22,10 +22,6 @@ const ServerId = ({ profile }) => {
     }
   }, [dispatch, params?.id, isOpen]);
 
-  useEffect(() => {
-    console.log("hello");
-  }, [isOpen]);
-
   const server = useSelector((state) => state.server.server);
 
   const { channelId, memberId } = params;
@@ -37,7 +33,7 @@ const ServerId = ({ profile }) => {
       </div>
       <div className="h-full md:pl-60">
         {channelId ? (
-          <Channel server={server} profile={profile} />
+          <Channel server={server} profile={profile} channelId={channelId} />
         ) : (
           <MemberIdPage server={server} profile={profile} />
         )}
