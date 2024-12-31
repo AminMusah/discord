@@ -19,34 +19,35 @@ import url from "../../api/url";
 import { useDispatch, useSelector } from "react-redux";
 import { getProfile } from "../../redux/apiCalls";
 import ImageUpload from "../ImageUpload";
+import { useModal } from "@/hooks/use-modal-store";
 // import { FileUpload } from "@/components/file-upload";
 
 export const MessageFileModal = () => {
   const [file, setFile] = useState("");
-  const [name, setName] = useState("");
   const [loading, setLoading] = useState("");
   const navigate = useNavigate();
   const { isOpen, onClose, type, data } = useModal();
+  const { apiUrl, query } = data;
 
-  const isModalOpen = isOpen && type === "createChannel";
+  const isModalOpen = isOpen && type === "messageFile";
 
-  console.log(file, "url");
-
-  const onSubmit = async (name, imgUrl) => {
-    console.log(name, imgUrl);
+  const onSubmit = async (value) => {
     try {
       setLoading(true);
+      const queryParams = new URLSearchParams({
+        url: apiUrl || "",
+        serverId: query.serverId,
+        channelId: query.channelId,
+      }).toString();
 
-      const server = await url.post(`/server/createserver/`, {
-        name: name,
-        imageUrl: imgUrl,
-      });
-      console.log(server);
-      navigate(`/server/${server.data.data._id}`);
-      toast.success(server.data.message);
+      const endpoint = `${apiUrl}?${queryParams}`;
+
+      await url.post(endpoint, { ...value, content: value });
+
+      toast.success("success");
+      onClose();
     } catch (error) {
       console.log(error);
-      toast.error(error.response.data);
     } finally {
       setLoading(false);
     }
@@ -68,44 +69,32 @@ export const MessageFileModal = () => {
     }
   }, []);
 
+  const handleClose = () => {
+    onClose();
+  };
+
   return (
-    <Dialog open>
+    <Dialog open={isModalOpen} onOpenChange={handleClose}>
       <Toaster position="top-center" richColors />
       <DialogContent className="bg-white text-black p-0 overflow-hidden">
         <DialogHeader className="pt-8 px-6">
           <DialogTitle className="text-2xl text-center font-bold">
-            Customize your server
+            Add an attachment{" "}
           </DialogTitle>
           <DialogDescription className="text-center text-zinc-500">
-            Give your server a personality with a name and an image. You can
-            always change it later.
+            Send a file as a message.
           </DialogDescription>
         </DialogHeader>
-        <ImageUpload setFile={setFile} />
+        <ImageUpload endpoint="messageFile" setFile={setFile} file={file} />
         <div className="mt-8 space-y-8 px-6">
           <form
             action=""
             className="group"
             onSubmit={(e) => {
               e.preventDefault();
-              onSubmit(name, file);
+              onSubmit(file);
             }}
           >
-            <div className="mb-6">
-              <label className="mb-2 block text-sm text-gray-600">
-                Server Name
-              </label>
-              <input
-                onChange={(e) => setName(e.target.value)}
-                id="name"
-                placeholder="Enter Server Name"
-                className="w-full rounded-md border border-gray-300 px-3 py-2.5 placeholder-gray-300 shadow shadow-gray-100 focus:border-gray-500 focus:outline-none valid:[&:not(:placeholder-shown)]:border-green-500 [&:not(:placeholder-shown):not(:focus):invalid~span]:block invalid:[&:not(:placeholder-shown):not(:focus)]:border-red-400"
-                required
-              />
-              {/* <span className="mt-2 hidden text-sm text-red-400">
-               Server name is required.
-              </span> */}
-            </div>
             <DialogFooter className=" py-4">
               <Button disabled={loading} className="w-full">
                 {loading ? (
@@ -113,7 +102,7 @@ export const MessageFileModal = () => {
                 ) : (
                   ""
                 )}
-                Create
+                Send
               </Button>
             </DialogFooter>
           </form>

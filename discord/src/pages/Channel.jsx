@@ -17,8 +17,6 @@ const Channel = ({ server, profile }) => {
     (channel) => channel?._id === channelId
   );
 
-  console.log(serverChannel, channelId, "here");
-
   return (
     <div className="bg-white dark:bg-[#313338] flex flex-col h-screen ">
       <ChatHeader

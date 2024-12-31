@@ -66,7 +66,7 @@ const CreateServerModal = () => {
             always change it later.
           </DialogDescription>
         </DialogHeader>
-        <ImageUpload setFile={setFile} />
+        <ImageUpload endpoint="serverImage" setFile={setFile} file={file} />
         <div className="mt-8 space-y-8 px-6">
           <form
             action=""
