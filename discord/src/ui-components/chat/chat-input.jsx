@@ -1,12 +1,13 @@
 import axios from "axios";
 import { useForm } from "react-hook-form";
-import { Plus } from "lucide-react";
+import { Plus, Smile } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useModal } from "@/hooks/use-modal-store";
 import useSocket from "../../hooks/useSocketHook";
-import { useState } from "react";
-// import { EmojiPicker } from "@/components/emoji-picker";
+import { useRef, useState } from "react";
+// import EmojiPicker from "../emoji-picker";
 import url from "../../api/url";
+import EmojiPicker from "../emoji-picker";
 
 export const ChatInput = ({ apiUrl, query, name, type }) => {
   const { onOpen } = useModal();
@@ -15,6 +16,7 @@ export const ChatInput = ({ apiUrl, query, name, type }) => {
     "http://localhost:6060"
   );
   const [input, setInput] = useState("");
+  const inputRef = useRef();
 
   const handleSendMessage = () => {
     if (input.trim()) {
@@ -39,7 +41,7 @@ export const ChatInput = ({ apiUrl, query, name, type }) => {
         channelId: query.channelId,
       }).toString();
 
-      const endpoint = `/${apiUrl}?${queryParams}`;
+      const endpoint = `${apiUrl}?${queryParams}`;
 
       await url.post(endpoint, { content: value });
     } catch (error) {
@@ -68,13 +70,24 @@ export const ChatInput = ({ apiUrl, query, name, type }) => {
           disabled={loading}
           className="px-14 py-6 bg-zinc-200/90 dark:bg-zinc-700/75 border-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-zinc-600 dark:text-zinc-200"
           placeholder={`Message ${type === "conversation" ? name : "#" + name}`}
+          ref={inputRef}
         />
         <div className="absolute top-7 right-8">
-          {/* <EmojiPicker
-                    // onChange={(emoji: string) =>
-                    //   field.onChange(`${field.value} ${emoji}`)
-                    // }
-                    /> */}
+          <EmojiPicker
+            onChange={(emoji) => {
+              const inputElement = inputRef.current;
+              const start = inputElement.selectionStart;
+              const end = inputElement.selectionEnd;
+              const newInput =
+                input.substring(0, start) + `${emoji} ` + input.substring(end);
+              setInput(newInput);
+              setTimeout(() => {
+                inputElement.selectionStart = inputElement.selectionEnd =
+                  start + emoji.length + 1;
+                inputElement.focus();
+              }, 0);
+            }}
+          />
         </div>
       </div>
     </form>
