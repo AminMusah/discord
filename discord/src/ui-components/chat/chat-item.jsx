@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useModal } from "@/hooks/use-modal-store";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { UserAvatar } from "../user-avatar";
 import url from "../../api/url";
 
@@ -40,15 +40,13 @@ export const ChatItem = ({
   const [submitting, setSubmitting] = useState(false);
   const { onOpen, isOpen } = useModal();
   const params = useParams();
-
-  console.log(isUpdated);
-
+  const navigate = useNavigate();
   const onMemberClick = () => {
     if (member._id === currentMember._id) {
       return;
     }
 
-    router.push(`/servers/${params?.serverId}/conversations/${member.id}`);
+    navigate(`/servers/${params?.serverId}/conversations/${member.id}`);
   };
 
   useEffect(() => {

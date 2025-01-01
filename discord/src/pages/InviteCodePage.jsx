@@ -19,6 +19,14 @@ const InviteCodePage = () => {
   const profile = useSelector((state) => state.profile.profile);
   const servers = useSelector((state) => state.server.server);
 
+  console.log(servers);
+
+  useEffect(() => {
+    if (!userId) {
+      return navigate("/auth/register"); // Redirect to sign-in page
+    }
+  }, []);
+
   useEffect(() => {
     if (!profile) {
       return navigate("/");
@@ -60,6 +68,11 @@ const InviteCodePage = () => {
 
   if (server) {
     onNew();
+  }
+
+  // Check if both servers and profile are empty
+  if (!servers.length && !profile) {
+    return navigate("/"); // Redirect to sign-in page
   }
 
   return (
