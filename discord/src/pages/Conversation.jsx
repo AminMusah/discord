@@ -69,8 +69,6 @@ const MemberIdPage = ({ profile }) => {
   const otherMember =
     memberOneId?.profile?._id === profile?._id ? memberTwoId : memberOneId;
 
-  console.log(otherMember, "other");
-
   return (
     <div className="bg-white dark:bg-[#313338] flex flex-col h-screen">
       <ChatHeader

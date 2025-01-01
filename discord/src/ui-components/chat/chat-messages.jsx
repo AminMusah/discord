@@ -47,8 +47,6 @@ export const ChatMessages = ({
     error: "",
   });
 
-  console.log(chatId, "chatid");
-
   const [currentPage, setCurrentPage] = useState(1);
   const [hasNextPage, setHasNextPage] = useState(true);
   const [messages, setMessages] = useState([]);
@@ -76,7 +74,6 @@ export const ChatMessages = ({
 
       const endpoint = `${apiUrl}?${queryParams}`;
 
-      console.log(endpoint);
       const response = await url.get(endpoint);
       setMessages((prevMessages) => {
         const existingIds = new Set(prevMessages.map((message) => message._id));
@@ -166,8 +163,6 @@ export const ChatMessages = ({
       </div>
     );
   }
-
-  console.log(messages, "msgs");
 
   return (
     <div ref={chatRef} className="flex-1 flex flex-col py-4 overflow-y-auto">

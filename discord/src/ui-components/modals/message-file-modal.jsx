@@ -34,6 +34,7 @@ export const MessageFileModal = () => {
         url: apiUrl || "",
         serverId: query.serverId,
         channelId: query.channelId,
+        conversationId: query.conversationId,
       }).toString();
 
       const endpoint = `${apiUrl}?${queryParams}`;

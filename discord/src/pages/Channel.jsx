@@ -26,13 +26,9 @@ const Channel = ({ server, profile }) => {
     serverMemberIds?.includes(member?._id)
   );
 
-  console.log(membersInServer); // This will log the members from the profile that are in the server
-
   const role = server?.members?.find(
     (member) => member?.profile?._id === userId
   )?.role;
-
-  console.log(role);
 
   return (
     <div className="bg-white dark:bg-[#313338] flex flex-col h-screen ">
