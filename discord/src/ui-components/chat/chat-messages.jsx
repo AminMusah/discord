@@ -1,4 +1,11 @@
-import { Fragment, useRef, ElementRef, useState, useEffect } from "react";
+import {
+  Fragment,
+  useRef,
+  ElementRef,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
 import { format } from "date-fns";
 import { Loader2, ServerCrash } from "lucide-react";
 import { ChatItem } from "./chat-item";
@@ -30,8 +37,8 @@ export const ChatMessages = ({
   const addKey = `chat:${chatId}:messages`;
   const updateKey = `chat:${chatId}:messages:update`;
 
-  const chatRef = useRef < ElementRef < "div" >> null;
-  const bottomRef = useRef < ElementRef < "div" >> null;
+  const chatRef = useRef(null);
+  const bottomRef = useRef;
 
   const { isOpen } = useModal();
 
@@ -47,10 +54,13 @@ export const ChatMessages = ({
 
   const { channelId, id } = params;
 
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [initialScrollDone, setInitialScrollDone] = useState(false);
+
   // All messages
   const getMessages = async () => {
     try {
-      setStatus({ loading: true });
+      // setStatus({ loading: true });
       const queryParams = new URLSearchParams({
         serverId: socketQuery?.serverId,
         channelId: socketQuery?.channelId,
@@ -60,8 +70,18 @@ export const ChatMessages = ({
       const endpoint = `/messages?${queryParams}`;
       const response = await url.get(endpoint);
       console.log(response);
-      setMessages(response.data);
-      setHasNextPage(response.data.hasNextPage);
+
+      // Append new messages to the existing ones, filtering out duplicates
+      setMessages((prevMessages) => {
+        const existingIds = new Set(prevMessages.map((message) => message._id)); // Create a set of existing message IDs
+        const newMessages = response.data.filter(
+          (message) => !existingIds.has(message._id)
+        ); // Filter out duplicates
+        return [...prevMessages, ...newMessages]; // Append new unique messages
+      });
+
+      // Determine if there are more messages to load based on the response
+      setHasNextPage(response.data.length > 0); // Set hasNextPage based on response
     } catch (error) {
       console.log(error);
       setStatus({
@@ -69,36 +89,55 @@ export const ChatMessages = ({
       });
     } finally {
       setStatus({ loading: false });
+      setLoadingMore(false);
     }
   };
 
   const loadMoreMessages = () => {
     if (hasNextPage) {
+      setLoadingMore(true);
       setCurrentPage((prevPage) => prevPage + 1);
     }
   };
+
+  const handleScroll = useCallback(() => {
+    if (chatRef.current) {
+      const { scrollTop } = chatRef.current;
+      if (scrollTop === 0) {
+        loadMoreMessages();
+      }
+    }
+  }, [hasNextPage]);
+
+  useEffect(() => {
+    const chatElement = chatRef.current;
+    if (chatElement) {
+      chatElement.addEventListener("scroll", handleScroll);
+    }
+    return () => {
+      if (chatElement) {
+        chatElement.removeEventListener("scroll", handleScroll);
+      }
+    };
+  }, [handleScroll]);
 
   useEffect(() => {
     getMessages();
   }, [currentPage, channelId, isOpen]);
 
-  // const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
-  //   useChatQuery({
-  //     queryKey,
-  //     apiUrl,
-  //     paramKey,
-  //     paramValue,
-  //   });
-  // useChatSocket({ queryKey, addKey, updateKey });
-  // useChatScroll({
-  //   chatRef,
-  //   bottomRef,
-  //   loadMore: fetchNextPage,
-  //   shouldLoadMore: !isFetchingNextPage && !!hasNextPage,
-  //   count: data?.pages?.[0]?.items?.length ?? 0,
-  // });
+  useEffect(() => {
+    const chatElement = chatRef.current;
+    if (chatElement && messages.length > 0 && !initialScrollDone) {
+      chatElement.scrollTop = chatElement.scrollHeight;
+      setInitialScrollDone(true);
+    }
+  }, [messages]);
 
-  if (status.loading === true) {
+  useEffect(() => {
+    getMessages();
+  }, []);
+
+  if (status.loading) {
     return (
       <div className="flex flex-col flex-1 justify-center items-center">
         <Loader2 className="h-7 w-7 text-zinc-500 animate-spin my-4" />
@@ -121,11 +160,20 @@ export const ChatMessages = ({
   }
 
   return (
-    <div className="flex-1 flex flex-col py-4 overflow-y-auto">
+    <div ref={chatRef} className="flex-1 flex flex-col py-4 overflow-y-auto">
       {/* {!hasNextPage && <div className="flex-1" />} */}
       {/* {!hasNextPage &&  */}
       <ChatWelcome type={type} name={name} />
       {/* } */}
+
+      {loadingMore ? (
+        <div className="flex flex-col flex-1 justify-center items-center">
+          <Loader2 className="h-5 w-5 text-zinc-500 animate-spin my-4" />
+          <p className="text-xs text-zinc-500 dark:text-zinc-400">
+            Loading more messages...
+          </p>
+        </div>
+      ) : null}
 
       <div className="flex flex-col-reverse mt-auto">
         {messages?.map((message, i) => (

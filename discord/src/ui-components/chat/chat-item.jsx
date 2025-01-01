@@ -41,12 +41,13 @@ export const ChatItem = ({
   const { onOpen, isOpen } = useModal();
   const params = useParams();
   const navigate = useNavigate();
+
   const onMemberClick = () => {
     if (member._id === currentMember._id) {
       return;
     }
 
-    navigate(`/servers/${params?.serverId}/conversations/${member.id}`);
+    navigate(`/server/${params?.id}/conversation/${member._id}`);
   };
 
   useEffect(() => {

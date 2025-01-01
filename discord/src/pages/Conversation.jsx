@@ -30,11 +30,13 @@ const MemberIdPage = ({ profile }) => {
     getCurrentMember();
   }, []);
 
-  useEffect(() => {
-    if (!currentMember) {
-      navigate(`/server/${id}`);
-    }
-  }, [currentMember, id, navigate]);
+  // useEffect(() => {
+  //   if (!currentMember) {
+  //     navigate(`/server/${id}`);
+  //   }
+  // }, [
+  //   currentMember
+  //   , id, navigate]);
 
   const getOrCreateConversation = async (memberOneId, memberTwoId) => {
     try {
@@ -52,11 +54,11 @@ const MemberIdPage = ({ profile }) => {
     getOrCreateConversation(currentMember, memberId);
   }, [currentMember, memberId]);
 
-  useEffect(() => {
-    if (!conversation || conversation === null) {
-      navigate(`/server/${id}`);
-    }
-  }, [conversation, id, navigate]);
+  // useEffect(() => {
+  //   if (!conversation || conversation === null) {
+  //     navigate(`/server/${id}`);
+  //   }
+  // }, [conversation, id, navigate]);
 
   let memberOneId, memberTwoId;
   if (conversation) {
