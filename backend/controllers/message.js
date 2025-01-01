@@ -98,7 +98,7 @@ const createMessages = async (req, res) => {
 
     const channelKey = `chat:${channelId}:messages`;
 
-    // res.socket.emit(channelKey, message); // Emit the message event
+    res.socket.emit(channelKey, message);
 
     res.status(200).json(message);
   } catch (error) {
@@ -109,7 +109,10 @@ const createMessages = async (req, res) => {
 
 const updateMessage = async (req, res) => {
   try {
+    console.log(req.method);
+
     const { content } = await req.body;
+    console.log(content);
 
     const { serverId, channelId, messageId } = req.query;
 
@@ -131,7 +134,7 @@ const updateMessage = async (req, res) => {
       return res.status(400).json({ error: "message ID is missing" });
     }
 
-    if (!content) {
+    if (!content && req.method === "PATCH") {
       return res.status(400).json({ error: "Content missing" });
     }
 
@@ -212,6 +215,10 @@ const updateMessage = async (req, res) => {
         { new: true }
       );
     }
+
+    const updateKey = `chat:${channelId}:updatedmessages`;
+
+    // res.socket.emit(updateKey, updateKey);
 
     res.status(200).json(msg);
   } catch (error) {

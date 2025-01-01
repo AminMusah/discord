@@ -38,7 +38,7 @@ export const ChatItem = ({
   const [edit, setEdit] = useState("");
   const [newContent, setNewContent] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const { onOpen } = useModal();
+  const { onOpen, isOpen } = useModal();
   const params = useParams();
 
   console.log(isUpdated);
@@ -89,10 +89,6 @@ export const ChatItem = ({
   useEffect(() => {
     setEdit(newContent !== "" ? newContent : content);
   }, []);
-
-  useEffect(() => {
-    setNewContent(newContent === "" ? content : newContent);
-  }, [newContent]);
 
   const fileType = fileUrl?.split(".").pop().split("?")[0];
 
@@ -237,6 +233,7 @@ export const ChatItem = ({
                     onOpen("deleteMessage", {
                       apiUrl: `${socketUrl}/${id}`,
                       query: socketQuery,
+                      messageId: id,
                     })
                   }
                   className="cursor-pointer ml-auto w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition"

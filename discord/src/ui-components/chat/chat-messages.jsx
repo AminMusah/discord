@@ -9,6 +9,7 @@ import { ChatItem } from "./chat-item";
 import { ChatWelcome } from "./chat-welcome";
 import url from "../../api/url";
 import { useParams } from "react-router-dom";
+import { useModal } from "../../hooks/use-modal-store";
 // import { useChatSocket } from "@/hooks/use-chat-socket";
 
 const DATE_FORMAT = "d MMM yyyy, HH:mm";
@@ -31,6 +32,8 @@ export const ChatMessages = ({
 
   const chatRef = useRef < ElementRef < "div" >> null;
   const bottomRef = useRef < ElementRef < "div" >> null;
+
+  const { isOpen } = useModal();
 
   const [status, setStatus] = useState({
     loading: false,
@@ -77,7 +80,7 @@ export const ChatMessages = ({
 
   useEffect(() => {
     getMessages();
-  }, [currentPage, channelId]);
+  }, [currentPage, channelId, isOpen]);
 
   // const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
   //   useChatQuery({
