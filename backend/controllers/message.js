@@ -44,8 +44,6 @@ const createMessages = async (req, res) => {
 
     const { serverId, channelId } = req.query;
 
-    console.log(req.query);
-
     const { _id } = req.user;
 
     if (!_id) {
@@ -109,8 +107,6 @@ const createMessages = async (req, res) => {
 
 const updateMessage = async (req, res) => {
   try {
-    console.log(req.method);
-
     const { content } = await req.body;
     console.log(content);
 

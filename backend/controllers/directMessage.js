@@ -1,6 +1,43 @@
 const DirectMessage = require("../model/DirectMessage");
 const Profile = require("../model/Profile");
 const Conversation = require("../model/Conversation");
+const Message = require("../model/Message");
+const Member = require("../model/Member");
+
+const getMessages = async (req, res) => {
+  try {
+    const { _id } = req.user;
+
+    const { serverId, conversationId, page = 1, limit = 10 } = req.query;
+
+    if (!_id) {
+      return res.status(401).send({ message: "Unauthorized!!" });
+    }
+
+    if (!serverId) {
+      return res.status(400).json({ error: "Server ID is required" });
+    }
+
+    if (!conversationId) {
+      return res.status(400).json({ error: "conversation ID is missing" });
+    }
+
+    const messages = await DirectMessage.find({
+      conversationId: conversationId,
+    })
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * limit)
+      .limit(parseInt(limit))
+      .populate({
+        path: "memberId",
+        populate: { path: "profile" },
+      });
+
+    res.status(200).json(messages);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
 
 // create channel
 const createDirectMessage = async (req, res) => {
@@ -23,25 +60,26 @@ const createDirectMessage = async (req, res) => {
       return res.status(400).json({ error: "Content missing" });
     }
 
-    // Database Query
     const conversation = await Conversation.findOne({
       _id: conversationId,
-      $or: [{ "memberOne.profile": _id }, { "memberTwo.profile": _id }],
     })
-      .populate("memberOneId.profile")
-      .populate("memberTwo.profile")
-      .exec();
-
-    console.log(conversation);
+      .populate({
+        path: "memberOneId",
+        populate: { path: "profile" },
+      })
+      .populate({
+        path: "memberTwoId",
+        populate: { path: "profile" },
+      });
 
     if (!conversation) {
       return res.status(404).json({ message: "Conversation not found" });
     }
 
     const member =
-      conversation._id === _id
-        ? conversation.memberOne
-        : conversation.memberTwo;
+      conversation.memberOneId.profile._id.toString() === _id.toString()
+        ? conversation.memberOneId
+        : conversation.memberTwoId;
 
     if (!member) {
       return res.status(404).json({ message: "Member not found" });
@@ -52,7 +90,7 @@ const createDirectMessage = async (req, res) => {
       content,
       fileUrl,
       conversationId,
-      memberId: member.id,
+      memberId: member._id,
     });
 
     const channelKey = `chat:${conversationId}:messages`;
@@ -65,4 +103,4 @@ const createDirectMessage = async (req, res) => {
   }
 };
 
-module.exports = { createDirectMessage };
+module.exports = { createDirectMessage, getMessages };

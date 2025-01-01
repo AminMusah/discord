@@ -39,6 +39,7 @@ export const ChatInput = ({ apiUrl, query, name, type }) => {
       const queryParams = new URLSearchParams({
         serverId: query.serverId,
         channelId: query.channelId,
+        conversationId: query.conversationId,
       }).toString();
 
       const endpoint = `${apiUrl}?${queryParams}`;

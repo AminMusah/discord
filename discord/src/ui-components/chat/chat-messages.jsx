@@ -47,6 +47,8 @@ export const ChatMessages = ({
     error: "",
   });
 
+  console.log(chatId, "chatid");
+
   const [currentPage, setCurrentPage] = useState(1);
   const [hasNextPage, setHasNextPage] = useState(true);
   const [messages, setMessages] = useState([]);
@@ -60,34 +62,42 @@ export const ChatMessages = ({
   // All messages
   const getMessages = async () => {
     try {
-      // setStatus({ loading: true });
+      if (currentPage === 1) {
+        setStatus({ loading: true });
+      } else {
+        setLoadingMore(true);
+      }
       const queryParams = new URLSearchParams({
         serverId: socketQuery?.serverId,
         channelId: socketQuery?.channelId,
+        conversationId: chatId,
         page: currentPage,
       }).toString();
 
-      const endpoint = `/messages?${queryParams}`;
+      const endpoint = `${apiUrl}?${queryParams}`;
+
+      console.log(endpoint);
       const response = await url.get(endpoint);
-      // Append new messages to the existing ones, filtering out duplicates
       setMessages((prevMessages) => {
-        const existingIds = new Set(prevMessages.map((message) => message._id)); // Create a set of existing message IDs
+        const existingIds = new Set(prevMessages.map((message) => message._id));
         const newMessages = response.data.filter(
           (message) => !existingIds.has(message._id)
-        ); // Filter out duplicates
-        return [...prevMessages, ...newMessages]; // Append new unique messages
+        );
+        return [...prevMessages, ...newMessages];
       });
 
-      // Determine if there are more messages to load based on the response
-      setHasNextPage(response.data.length > 0); // Set hasNextPage based on response
+      setHasNextPage(response.data.length > 0);
     } catch (error) {
       console.log(error);
       setStatus({
         error: "error",
       });
     } finally {
-      setStatus({ loading: false });
-      setLoadingMore(false);
+      if (currentPage === 1) {
+        setStatus({ loading: false });
+      } else {
+        setLoadingMore(false);
+      }
     }
   };
 
@@ -121,7 +131,7 @@ export const ChatMessages = ({
 
   useEffect(() => {
     getMessages();
-  }, [currentPage, channelId, isOpen]);
+  }, [currentPage, channelId, isOpen, chatId]);
 
   useEffect(() => {
     const chatElement = chatRef.current;
@@ -157,10 +167,12 @@ export const ChatMessages = ({
     );
   }
 
+  console.log(messages, "msgs");
+
   return (
     <div ref={chatRef} className="flex-1 flex flex-col py-4 overflow-y-auto">
       {!hasNextPage && <div className="flex-1" />}
-      {!hasNextPage && <ChatWelcome type={type} name={name} />}
+      {hasNextPage && <ChatWelcome type={type} name={name} />}
 
       {loadingMore ? (
         <div className="flex flex-col flex-1 justify-center items-center">
@@ -174,11 +186,10 @@ export const ChatMessages = ({
       <div className="flex flex-col-reverse mt-auto">
         {messages?.map((message, i) => (
           <Fragment key={i}>
-            {/* {group.items.map((message) => ( */}
             <ChatItem
               key={message._id}
               id={message._id}
-              currentMember={member?.[0]}
+              currentMember={member}
               member={message.memberId}
               content={message?.content}
               fileUrl={message?.fileUrl}
@@ -189,7 +200,6 @@ export const ChatMessages = ({
               socketQuery={socketQuery}
               role={role}
             />
-            {/* ))} */}
           </Fragment>
         ))}
       </div>

@@ -67,9 +67,9 @@ const MemberIdPage = ({ profile }) => {
   }
 
   const otherMember =
-    memberOneId?.profile?._id === profile._id ? memberTwoId : memberOneId;
+    memberOneId?.profile?._id === profile?._id ? memberTwoId : memberOneId;
 
-  console.log(otherMember);
+  console.log(otherMember, "other");
 
   return (
     <div className="bg-white dark:bg-[#313338] flex flex-col h-screen">
@@ -85,25 +85,26 @@ const MemberIdPage = ({ profile }) => {
       {/* {!searchParams.video && ( */}
       <>
         <ChatMessages
-          // member={currentMember}
-          name="otherMember.profile.name"
-          chatId="conversation.id"
+          member={currentMember}
+          name={otherMember?.profile?.name || ""}
+          chatId={conversation?._id}
           type="conversation"
-          // apiUrl="/api/direct-messages"
-          paramKey="conversationId"
-          paramValue="conversation.id"
-          // socketUrl="/api/socket/direct-messages"
-          // socketQuery={{
-          //   conversationId: conversation.id,
-          // }}
+          apiUrl="/direct-messages"
+          // paramKey={conversationId}
+          paramKey={conversation?._id}
+          paramValue={conversation?._id}
+          socketUrl="/socket/direct-message"
+          socketQuery={{
+            conversationId: conversation?._id,
+          }}
         />
         <ChatInput
-        // name={otherMember.profile.name}
-        // type="conversation"
-        // apiUrl="/api/socket/direct-messages"
-        // query={{
-        //   conversationId: conversation.id,
-        // }}
+          name={otherMember?.profile?.name || ""}
+          type="conversation"
+          apiUrl="/socket/direct-message"
+          query={{
+            conversationId: conversation?._id,
+          }}
         />
       </>
       {/* )} */}

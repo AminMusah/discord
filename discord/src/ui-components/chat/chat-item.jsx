@@ -43,11 +43,11 @@ export const ChatItem = ({
   const navigate = useNavigate();
 
   const onMemberClick = () => {
-    if (member._id === currentMember._id) {
+    if (member?._id === currentMember?._id) {
       return;
     }
 
-    navigate(`/server/${params?.id}/conversation/${member._id}`);
+    navigate(`/server/${params?.id}/conversation/${member?._id}`);
   };
 
   useEffect(() => {
@@ -93,7 +93,7 @@ export const ChatItem = ({
 
   const isAdmin = currentMember?.role === "ADMIN";
   const isModerator = currentMember?.role === "MODERATOR";
-  const isOwner = currentMember?._id === member._id;
+  const isOwner = currentMember?._id === member?._id;
   const canDeleteMessage = deleted && (isAdmin || isModerator || isOwner);
   const canEditMessage = deleted && isOwner && !fileUrl;
   const isPDF = fileType === "pdf" && fileUrl;
@@ -120,10 +120,10 @@ export const ChatItem = ({
 
               <TooltipProvider>
                 <Tooltip delayDuration={50}>
-                  <TooltipTrigger>{roleIconMap[member.role]}</TooltipTrigger>
+                  <TooltipTrigger>{roleIconMap[member?.role]}</TooltipTrigger>
                   <TooltipContent side="top" align="center">
                     <p className="font-semibold text-sm capitalize">
-                      {member.role}
+                      {member?.role}
                     </p>
                   </TooltipContent>
                 </Tooltip>

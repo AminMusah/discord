@@ -49,14 +49,14 @@ const Channel = ({ server, profile }) => {
             name={serverChannel?.name}
             chatId={serverChannel?.id}
             type="channel"
-            apiUrl="/api/messages"
-            socketUrl="/api/socket/messages"
+            apiUrl="/messages"
+            socketUrl="/"
             socketQuery={{
               channelId: serverChannel._id,
               serverId: server._id,
             }}
             paramKey="channelId"
-            paramValue={serverChannel?.id}
+            paramValue={serverChannel?._id}
             role={role}
           />
           <ChatInput
