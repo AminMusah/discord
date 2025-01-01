@@ -69,8 +69,6 @@ export const ChatMessages = ({
 
       const endpoint = `/messages?${queryParams}`;
       const response = await url.get(endpoint);
-      console.log(response);
-
       // Append new messages to the existing ones, filtering out duplicates
       setMessages((prevMessages) => {
         const existingIds = new Set(prevMessages.map((message) => message._id)); // Create a set of existing message IDs
@@ -161,10 +159,8 @@ export const ChatMessages = ({
 
   return (
     <div ref={chatRef} className="flex-1 flex flex-col py-4 overflow-y-auto">
-      {/* {!hasNextPage && <div className="flex-1" />} */}
-      {/* {!hasNextPage &&  */}
-      <ChatWelcome type={type} name={name} />
-      {/* } */}
+      {!hasNextPage && <div className="flex-1" />}
+      {!hasNextPage && <ChatWelcome type={type} name={name} />}
 
       {loadingMore ? (
         <div className="flex flex-col flex-1 justify-center items-center">
