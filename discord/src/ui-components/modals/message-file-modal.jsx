@@ -1,5 +1,3 @@
-import axios from "axios";
-import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { Toaster, toast } from "sonner";
 import { useNavigate } from "react-router-dom";
@@ -12,7 +10,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-// import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import url from "../../api/url";
@@ -20,7 +17,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { getProfile } from "../../redux/apiCalls";
 import ImageUpload from "../ImageUpload";
 import { useModal } from "@/hooks/use-modal-store";
-// import { FileUpload } from "@/components/file-upload";
 
 export const MessageFileModal = () => {
   const [file, setFile] = useState("");
@@ -42,8 +38,8 @@ export const MessageFileModal = () => {
 
       const endpoint = `${apiUrl}?${queryParams}`;
 
-      await url.post(endpoint, { ...value, content: value });
-
+      await url.post(endpoint, { ...value, content: value, fileUrl: value });
+      setFile("");
       toast.success("success");
       onClose();
     } catch (error) {

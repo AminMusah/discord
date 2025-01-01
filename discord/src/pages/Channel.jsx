@@ -8,6 +8,7 @@ import { ChatMessages } from "../ui-components/chat/chat-messages";
 
 const Channel = ({ server, profile }) => {
   const [channels, setChannels] = useState("");
+  const userId = localStorage.getItem("user");
 
   const params = useParams();
 
@@ -16,6 +17,22 @@ const Channel = ({ server, profile }) => {
   const serverChannel = server?.channels?.find(
     (channel) => channel?._id === channelId
   );
+
+  // Check if profile members are in the server
+  const profileMemberIds = profile.members?.map((member) => member?._id);
+  const serverMemberIds = server.members?.map((member) => member?._id);
+
+  const membersInServer = profile.members?.filter((member) =>
+    serverMemberIds?.includes(member?._id)
+  );
+
+  console.log(membersInServer); // This will log the members from the profile that are in the server
+
+  const role = server?.members?.find(
+    (member) => member?.profile?._id === userId
+  )?.role;
+
+  console.log(role);
 
   return (
     <div className="bg-white dark:bg-[#313338] flex flex-col h-screen ">
@@ -28,22 +45,24 @@ const Channel = ({ server, profile }) => {
         <>
           <ChatMessages
             // member={member}
+            member={membersInServer}
             name={serverChannel?.name}
             chatId={serverChannel?.id}
             type="channel"
-            // apiUrl="/api/messages"
-            // socketUrl="/api/socket/messages"
-            // socketQuery={{
-            //   channelId: channel.id,
-            //   serverId: channel.serverId,
-            // }}
+            apiUrl="/api/messages"
+            socketUrl="/api/socket/messages"
+            socketQuery={{
+              channelId: serverChannel._id,
+              serverId: server._id,
+            }}
             paramKey="channelId"
             paramValue={serverChannel?.id}
+            role={role}
           />
           <ChatInput
             name={serverChannel.name}
             type="channel"
-            apiUrl="/messages"
+            apiUrl="/socket/messages"
             query={{
               channelId: serverChannel._id,
               serverId: server._id,

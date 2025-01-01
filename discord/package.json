@@ -26,6 +26,7 @@
     "axios": "^1.6.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
+    "date-fns": "^4.1.0",
     "emoji-mart": "^5.6.0",
     "firebase": "^11.1.0",
     "localforage": "^1.10.0",

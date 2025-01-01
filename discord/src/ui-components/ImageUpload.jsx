@@ -92,7 +92,7 @@ const ImageUpload = ({ setFile, file, endpoint }) => {
     <div className="flex justify-center items-center">
       {endpoint === "messageFile" &&
       (selectedFile.length > 0 || file?.length > 0) ? (
-        ext ? (
+        ext === "file" ? (
           <div className="relative flex  items-center p-2 mt-2 rounded-md bg-gray-300">
             <File className="h-10 w-10 stroke-indigo-400 " />
             <div className="max-w-[400px] overflow-hidden">

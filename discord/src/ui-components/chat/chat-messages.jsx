@@ -1,5 +1,5 @@
-import { Fragment, useRef, ElementRef } from "react";
-// import { format } from "date-fns";
+import { Fragment, useRef, ElementRef, useState, useEffect } from "react";
+import { format } from "date-fns";
 import { Loader2, ServerCrash } from "lucide-react";
 import { ChatItem } from "./chat-item";
 
@@ -7,6 +7,8 @@ import { ChatItem } from "./chat-item";
 // import { useChatScroll } from "@/hooks/use-chat-scroll";
 
 import { ChatWelcome } from "./chat-welcome";
+import url from "../../api/url";
+import { useParams } from "react-router-dom";
 // import { useChatSocket } from "@/hooks/use-chat-socket";
 
 const DATE_FORMAT = "d MMM yyyy, HH:mm";
@@ -21,6 +23,7 @@ export const ChatMessages = ({
   paramKey,
   paramValue,
   type,
+  role,
 }) => {
   const queryKey = `chat:${chatId}`;
   const addKey = `chat:${chatId}:messages`;
@@ -28,6 +31,53 @@ export const ChatMessages = ({
 
   const chatRef = useRef < ElementRef < "div" >> null;
   const bottomRef = useRef < ElementRef < "div" >> null;
+
+  const [status, setStatus] = useState({
+    loading: false,
+    error: "",
+  });
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [hasNextPage, setHasNextPage] = useState(true);
+  const [messages, setMessages] = useState([]);
+  const params = useParams();
+
+  const { channelId, id } = params;
+
+  // All messages
+  const getMessages = async () => {
+    try {
+      setStatus({ loading: true });
+      const queryParams = new URLSearchParams({
+        serverId: socketQuery?.serverId,
+        channelId: socketQuery?.channelId,
+        page: currentPage,
+      }).toString();
+
+      const endpoint = `/messages?${queryParams}`;
+      const response = await url.get(endpoint);
+      console.log(response);
+      setMessages(response.data);
+      setHasNextPage(response.data.hasNextPage);
+    } catch (error) {
+      console.log(error);
+      setStatus({
+        error: "error",
+      });
+    } finally {
+      setStatus({ loading: false });
+    }
+  };
+
+  const loadMoreMessages = () => {
+    if (hasNextPage) {
+      setCurrentPage((prevPage) => prevPage + 1);
+    }
+  };
+
+  useEffect(() => {
+    getMessages();
+  }, [currentPage, channelId]);
 
   // const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
   //   useChatQuery({
@@ -45,27 +95,27 @@ export const ChatMessages = ({
   //   count: data?.pages?.[0]?.items?.length ?? 0,
   // });
 
-  // if (status === "pending") {
-  //   return (
-  //     <div className="flex flex-col flex-1 justify-center items-center">
-  //       <Loader2 className="h-7 w-7 text-zinc-500 animate-spin my-4" />
-  //       <p className="text-xs text-zinc-500 dark:text-zinc-400">
-  //         Loading messages...
-  //       </p>
-  //     </div>
-  //   );
-  // }
+  if (status.loading === true) {
+    return (
+      <div className="flex flex-col flex-1 justify-center items-center">
+        <Loader2 className="h-7 w-7 text-zinc-500 animate-spin my-4" />
+        <p className="text-xs text-zinc-500 dark:text-zinc-400">
+          Loading messages...
+        </p>
+      </div>
+    );
+  }
 
-  // if (status === "error") {
-  //   return (
-  //     <div className="flex flex-col flex-1 justify-center items-center">
-  //       <ServerCrash className="h-7 w-7 text-zinc-500 my-4" />
-  //       <p className="text-xs text-zinc-500 dark:text-zinc-400">
-  //         Something went wrong!
-  //       </p>
-  //     </div>
-  //   );
-  // }
+  if (status.error === "error") {
+    return (
+      <div className="flex flex-col flex-1 justify-center items-center">
+        <ServerCrash className="h-7 w-7 text-zinc-500 my-4" />
+        <p className="text-xs text-zinc-500 dark:text-zinc-400">
+          Something went wrong!
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex-1 flex flex-col py-4 overflow-y-auto">
@@ -73,40 +123,28 @@ export const ChatMessages = ({
       {/* {!hasNextPage &&  */}
       <ChatWelcome type={type} name={name} />
       {/* } */}
-      {/* {hasNextPage && (
-        <div className="flex justify-center">
-          {isFetchingNextPage ? (
-            <Loader2 className="h-6 w-6 text-zinc-500 animate-spin my-4" />
-          ) : (
-            <button
-              onClick={() => fetchNextPage()}
-              className="text-zinc-500 hover:text-zinc-600 dark:text-zinc-400 text-xs my-4 dark:hover:text-zinc-300 transition"
-            >
-              Load previous messages
-            </button>
-          )}
-        </div>
-      )} */}
+
       <div className="flex flex-col-reverse mt-auto">
-        {/* {data?.pages?.map((group, i) => ( */}
-        {/* <Fragment key={i}> */}
-        {/* {group.items.map((message) => ( */}
-        <ChatItem
-        // key={message.id}
-        // id={message.id}
-        // currentMember={member}
-        // member={message.member}
-        // content={message.content}
-        // fileUrl={message.fileUrl}
-        // deleted={message.deleted}
-        // timestamp={format(new Date(message.createdAt), DATE_FORMAT)}
-        // isUpdated={message.updatedAt !== message.createdAt}
-        // socketUrl={socketUrl}
-        // socketQuery={socketQuery}
-        />
-        {/* ))} */}
-        {/* </Fragment> */}
-        {/* ))} */}
+        {messages?.map((message, i) => (
+          <Fragment key={i}>
+            {/* {group.items.map((message) => ( */}
+            <ChatItem
+              key={message._id}
+              id={message._id}
+              currentMember={member?.[0]}
+              member={message.memberId}
+              content={message?.content}
+              fileUrl={message?.fileUrl}
+              deleted={message?.deleted}
+              timestamp={format(new Date(message.createdAt), DATE_FORMAT)}
+              isUpdated={message.updatedAt !== message.createdAt}
+              socketUrl={socketUrl}
+              socketQuery={socketQuery}
+              role={role}
+            />
+            {/* ))} */}
+          </Fragment>
+        ))}
       </div>
       {/* <div ref={bottomRef} /> */}
     </div>
