@@ -4,13 +4,21 @@ import url from "../api/url";
 import { ChatHeader } from "../ui-components/chat/chat-header";
 import { ChatInput } from "../ui-components/chat/chat-input";
 import { ChatMessages } from "../ui-components/chat/chat-messages";
+import MediaRoom from "../ui-components/media-room";
 
-const MemberIdPage = ({ profile }) => {
+const MemberIdPage = ({ profile, server }) => {
   const params = useParams();
   const [currentMember, setCurrentMember] = useState(null);
   const [conversation, setConversation] = useState(null);
   const navigate = useNavigate();
   const { memberId, id } = params;
+
+  const searchParams = new URLSearchParams(location.search);
+
+  // Check if the video parameter is set to true
+  const isVideoActive = searchParams.get("video") === "true"; // This will be true if video=true is in the URL
+
+  console.log(isVideoActive, "Is Video Active");
 
   const getCurrentMember = async () => {
     try {
@@ -77,35 +85,33 @@ const MemberIdPage = ({ profile }) => {
         serverId={params.id}
         type="conversation"
       />
-      {/* {searchParams.video && (
-        <MediaRoom chatId={conversation.id} video={true} audio={true} />
-      )} */}
-      {/* {!searchParams.video && ( */}
-      <>
-        <ChatMessages
-          member={currentMember}
-          name={otherMember?.profile?.name || ""}
-          chatId={conversation?._id}
-          type="conversation"
-          apiUrl="/direct-messages"
-          // paramKey={conversationId}
-          paramKey={conversation?._id}
-          paramValue={conversation?._id}
-          socketUrl="/socket/direct-message"
-          socketQuery={{
-            conversationId: conversation?._id,
-          }}
-        />
-        <ChatInput
-          name={otherMember?.profile?.name || ""}
-          type="conversation"
-          apiUrl="/socket/direct-message"
-          query={{
-            conversationId: conversation?._id,
-          }}
-        />
-      </>
-      {/* )} */}
+      {isVideoActive ? (
+        <MediaRoom chatId={conversation?._id} video={true} audio={true} />
+      ) : (
+        <>
+          <ChatMessages
+            member={currentMember}
+            name={otherMember?.profile?.name || ""}
+            chatId={conversation?._id}
+            type="conversation"
+            apiUrl="/direct-messages"
+            paramKey={conversation?._id}
+            paramValue={conversation?._id}
+            socketUrl="/socket/direct-message"
+            socketQuery={{
+              conversationId: conversation?._id,
+            }}
+          />
+          <ChatInput
+            name={otherMember?.profile?.name || ""}
+            type="conversation"
+            apiUrl="/socket/direct-message"
+            query={{
+              conversationId: conversation?._id,
+            }}
+          />
+        </>
+      )}
     </div>
   );
 };

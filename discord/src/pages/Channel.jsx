@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getChannel } from "../redux/apiCalls";
 import { ChatInput } from "../ui-components/chat/chat-input";
 import { ChatMessages } from "../ui-components/chat/chat-messages";
+import MediaRoom from "../ui-components/media-room";
 
 const Channel = ({ server, profile }) => {
   const [channels, setChannels] = useState("");
@@ -30,6 +31,8 @@ const Channel = ({ server, profile }) => {
     (member) => member?.profile?._id === userId
   )?.role;
 
+  console.log(serverChannel);
+
   return (
     <div className="bg-white dark:bg-[#313338] flex flex-col h-screen ">
       <ChatHeader
@@ -48,30 +51,30 @@ const Channel = ({ server, profile }) => {
             apiUrl="/messages"
             socketUrl="/"
             socketQuery={{
-              channelId: serverChannel._id,
-              serverId: server._id,
+              channelId: serverChannel?._id,
+              serverId: server?._id,
             }}
             paramKey="channelId"
             paramValue={serverChannel?._id}
             role={role}
           />
           <ChatInput
-            name={serverChannel.name}
+            name={serverChannel?.name}
             type="channel"
             apiUrl="/socket/messages"
             query={{
-              channelId: serverChannel._id,
-              serverId: server._id,
+              channelId: serverChannel?._id,
+              serverId: server?._id,
             }}
           />
         </>
       )}
-      {/* {channel.type === ChannelType.AUDIO && (
-    <MediaRoom chatId={channel.id} video={false} audio={true} />
-  )} */}
-      {/* {channel.type === ChannelType.VIDEO && (
-    <MediaRoom chatId={channel.id} video={true} audio={true} />
-  )} */}
+      {serverChannel?.type === "AUDIO" && (
+        <MediaRoom chatId={channelId} video={false} audio={true} />
+      )}
+      {serverChannel?.type === "VIDEO" && (
+        <MediaRoom chatId={channelId} video={true} audio={true} />
+      )}
     </div>
   );
 };
