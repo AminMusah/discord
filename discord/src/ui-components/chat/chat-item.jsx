@@ -71,6 +71,7 @@ export const ChatItem = ({
         channelId: socketQuery?.channelId,
         serverId: socketQuery?.serverId,
         messageId: id,
+        directMessageId: id,
       }).toString();
 
       const endpoint = `/messages?${queryParams}`;

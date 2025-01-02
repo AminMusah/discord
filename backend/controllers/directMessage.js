@@ -103,4 +103,118 @@ const createDirectMessage = async (req, res) => {
   }
 };
 
+const updateMessage = async (req, res) => {
+  try {
+    const { content } = await req.body;
+    console.log(content);
+
+    const { directMessageId, conversationId } = req.query;
+
+    const { _id } = req.user;
+
+    if (!_id) {
+      return res.status(401).send({ message: "Unauthorized!!" });
+    }
+
+    if (!directMessageId) {
+      return res.status(400).json({ error: "direct Message ID is required" });
+    }
+
+    if (!conversationId) {
+      return res.status(400).json({ error: "conversation ID is missing" });
+    }
+
+    if (!content && req.method === "PATCH") {
+      return res.status(400).json({ error: "Content missing" });
+    }
+
+    const conversation = await Conversation.findOne({
+      _id: conversationId,
+    })
+      .populate({
+        path: "memberOneId",
+        populate: { path: "profile" },
+      })
+      .populate({
+        path: "memberTwoId",
+        populate: { path: "profile" },
+      });
+
+    if (!conversation) {
+      return res.status(404).json({ message: "Conversation not found" });
+    }
+
+    const member =
+      conversation.memberOneId.profile._id.toString() === _id.toString()
+        ? conversation.memberOneId
+        : conversation.memberTwoId;
+
+    if (!member) {
+      return res.status(404).json({ message: "Member not found" });
+    }
+
+    const message = await DirectMessage.findOne({
+      _id: directMessageId,
+      conversationId: conversationId,
+    });
+
+    if (!message) {
+      return res.status(404).json({
+        error: "message not found",
+      });
+    }
+
+    const isMessageOwner =
+      message.memberId.toString() === member?._id?.toString();
+    const isAdmin = member.role === "ADMIN";
+    const isModerator = message.role === "MODERATOR";
+    const canModify = isMessageOwner || isAdmin || isModerator;
+    console.log(member, message);
+
+    if (!canModify) {
+      return res.status(404).json({
+        error: "Unauthorized",
+      });
+    }
+
+    let msg;
+    // deleting message
+    if (req.method === "DELETE") {
+      msg = await DirectMessage.findByIdAndUpdate(
+        { _id: directMessageId },
+        {
+          content: "This message has been deleted.",
+          fileUrl: null,
+          deleted: true,
+        },
+        { new: true }
+      );
+    }
+
+    if (req.method === "PATCH") {
+      if (!isMessageOwner) {
+        return res.status(404).json({
+          error: "Unauthorized",
+        });
+      }
+      msg = await Message.findByIdAndUpdate(
+        { _id: directMessageId },
+        {
+          content,
+        },
+        { new: true }
+      );
+    }
+
+    const updateKey = `chat:${conversationId}:updatedmessages`;
+
+    // res.socket.emit(updateKey, updateKey);
+
+    res.status(200).json(msg);
+  } catch (error) {
+    console.error("[UPDATE_MESSAGE]", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 module.exports = { createDirectMessage, getMessages };
