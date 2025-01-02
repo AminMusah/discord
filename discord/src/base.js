@@ -1,2 +1,2 @@
-const production = "https://server-nine-kappa.vercel.app";
+const production = "https://discord-server-ebon.vercel.app";
 export default production;

@@ -5,16 +5,14 @@ import { Input } from "@/components/ui/input";
 import { useModal } from "@/hooks/use-modal-store";
 import useSocket from "../../hooks/useSocketHook";
 import { useRef, useState } from "react";
-// import EmojiPicker from "../emoji-picker";
 import url from "../../api/url";
 import EmojiPicker from "../emoji-picker";
+import production from "../../base";
 
 export const ChatInput = ({ apiUrl, query, name, type }) => {
   const { onOpen } = useModal();
   const [loading, setLoading] = useState(false);
-  const { connected, messages, sendMessage } = useSocket(
-    "http://localhost:6060"
-  );
+  const { connected, messages, sendMessage } = useSocket(`${production}`);
   const [input, setInput] = useState("");
   const inputRef = useRef();
 

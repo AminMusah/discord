@@ -19,7 +19,7 @@ import url from "../../api/url";
 import { useParams } from "react-router-dom";
 import { useModal } from "../../hooks/use-modal-store";
 import useSocket from "../../hooks/useSocketHook";
-// import { useChatSocket } from "@/hooks/use-chat-socket";
+import production from "../../base";
 
 const DATE_FORMAT = "d MMM yyyy, HH:mm";
 
@@ -59,9 +59,7 @@ export const ChatMessages = ({
   const [loadingMore, setLoadingMore] = useState(false);
   const [initialScrollDone, setInitialScrollDone] = useState(false);
 
-  const { connected, messages, sendMessage } = useSocket(
-    "http://localhost:6060"
-  );
+  const { connected, messages, sendMessage } = useSocket(`${production}`);
   const socketRef = useRef(null);
 
   // All messages
@@ -154,7 +152,7 @@ export const ChatMessages = ({
 
   useEffect(() => {
     // Initialize the socket connection
-    socketRef.current = io("http://localhost:6060"); // Replace with your server URL
+    socketRef.current = io(`${production}`); // Replace with your server URL
 
     // Listen for the event from the backend
     socketRef.current.on(
