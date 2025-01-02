@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 import { useNavigate, useParams } from "react-router-dom";
 import image from "../../assets/guillermo-diaz-fs6zYhHyzvI-unsplash.jpg";
 
-export const ServerItem = ({ id, imageUrl, name }) => {
+const ServerItem = ({ id, imageUrl, name }) => {
   const params = useParams();
   const navigate = useNavigate();
 
@@ -50,3 +50,5 @@ export const ServerItem = ({ id, imageUrl, name }) => {
     </TooltipProvider>
   );
 };
+
+export default ServerItem;
