@@ -94,9 +94,16 @@ const createDirectMessage = async (req, res) => {
       memberId: member._id,
     });
 
+    const populatedMessage = await Message.findById(message._id)
+      .populate({
+        path: "memberId",
+        populate: { path: "profile" },
+      })
+      .populate("conversationId");
+
     const io = getIo();
 
-    io.emit(`chat:${conversationId}:messages`, msg);
+    io.emit(`chat:${conversationId}:messages`, populatedMessage);
 
     res.status(200).json({ message: "chat created!", data: message });
   } catch (error) {
@@ -207,9 +214,16 @@ const updateMessage = async (req, res) => {
       );
     }
 
+    const populatedMessage = await Message.findById(msg._id)
+      .populate({
+        path: "memberId",
+        populate: { path: "profile" },
+      })
+      .populate("conversationId");
+
     const io = getIo();
 
-    io.emit(`chat:${conversationId}:updatedmessages`, msg);
+    io.emit(`chat:${conversationId}:updatedmessages`, populatedMessage);
 
     res.status(200).json(msg);
   } catch (error) {

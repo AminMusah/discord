@@ -152,8 +152,6 @@ export const ChatMessages = ({
     }
   }, [msgs]);
 
-  console.log(messages);
-
   useEffect(() => {
     // Initialize the socket connection
     socketRef.current = io("http://localhost:6060"); // Replace with your server URL
