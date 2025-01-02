@@ -160,7 +160,10 @@ export const ChatMessages = ({
 
     // Listen for the event from the backend
     socketRef.current.on(
-      `chat:${channelId}:messages` || `chat:${channelId}:updatedmessages`,
+      `chat:${channelId}:messages` ||
+        `chat:${channelId}:updatedmessages` ||
+        `chat:${chatId}:messages` ||
+        `chat:${chatId}:updatedmessages`,
       (newMessage) => {
         setMsgs((prevMessages) => [newMessage, ...prevMessages]);
         console.log("New message received:", newMessage);
