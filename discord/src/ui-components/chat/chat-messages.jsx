@@ -150,7 +150,7 @@ export const ChatMessages = ({
     if (bottomRef.current) {
       bottomRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [messages]);
+  }, [msgs]);
 
   console.log(messages);
 

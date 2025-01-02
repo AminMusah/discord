@@ -95,12 +95,16 @@ const createMessages = async (req, res) => {
       memberId: member?._id,
     });
 
+    const populatedMessage = await Message.findById(message._id)
+      .populate({
+        path: "memberId",
+        populate: { path: "profile" },
+      })
+      .populate("channelId");
+
     // Emit the message to clients
     const io = getIo();
-    io.emit(`chat:${channelId}:messages`, message);
-
-    console.log("Channel ID:", channelId); // Check if `channelId` is valid
-    console.log("New Message:", message); // Ensure the message is created successfully
+    io.emit(`chat:${channelId}:messages`, populatedMessage);
 
     res.status(200).json(message);
   } catch (error) {
@@ -216,9 +220,16 @@ const updateMessage = async (req, res) => {
       );
     }
 
+    const populatedMessage = await Message.findById(msg._id)
+      .populate({
+        path: "memberId",
+        populate: { path: "profile" },
+      })
+      .populate("channelId");
+
     const io = getIo();
 
-    io.emit(`chat:${channelId}:updatedmessages`, msg);
+    io.emit(`chat:${channelId}:updatedmessages`, populatedMessage);
 
     res.status(200).json(msg);
   } catch (error) {
