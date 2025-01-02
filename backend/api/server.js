@@ -10,6 +10,7 @@ const memberRoute = require("../routes/member");
 const messageRoute = require("../routes/directMessage");
 const messagesRoute = require("../routes/message");
 const conversationRoute = require("../routes/conversation");
+const liveKitRoute = require("../routes/livekit");
 
 const app = express();
 
@@ -39,6 +40,7 @@ app.use("/api/", memberRoute);
 app.use("/api/", messageRoute);
 app.use("/api/", messagesRoute);
 app.use("/api/", conversationRoute);
+app.use("/api/", liveKitRoute);
 
 // Middleware to attach socket to the request object
 // app.use((req, res, next) => {

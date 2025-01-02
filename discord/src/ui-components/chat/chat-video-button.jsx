@@ -13,8 +13,6 @@ const ChatVideoButton = () => {
   const navigate = useNavigate();
   const pathname = location.pathname;
   const searchParams = new URLSearchParams(location.search);
-  const params = useParams();
-  console.log(pathname);
 
   const isVideo = searchParams.get("video");
   const Icon = isVideo ? VideoOff : Video;

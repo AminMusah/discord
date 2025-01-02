@@ -22,8 +22,6 @@ export const DeleteMessageModal = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  console.log(data);
-
   const onClick = async () => {
     try {
       setIsLoading(true);

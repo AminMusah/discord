@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ControlBar,
   GridLayout,
@@ -15,14 +15,13 @@ import { getProfile } from "../redux/apiCalls";
 import { useDispatch, useSelector } from "react-redux";
 import { Loader2 } from "lucide-react";
 import { useModal } from "../hooks/use-modal-store";
+import url from "../api/url";
 
 const serverUrl = import.meta.env.VITE_WEB_SOCKET_URL;
-const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MzU3ODM5NzAsImlzcyI6IkFQSTNUVWZ6TGZUd3VIYyIsIm5iZiI6MTczNTc3Njc3MCwic3ViIjoicXVpY2tzdGFydCB1c2VyIDd2MjQxOCIsInZpZGVvIjp7ImNhblB1Ymxpc2giOnRydWUsImNhblB1Ymxpc2hEYXRhIjp0cnVlLCJjYW5TdWJzY3JpYmUiOnRydWUsInJvb20iOiJxdWlja3N0YXJ0IHJvb20iLCJyb29tSm9pbiI6dHJ1ZX19.-YZknqO-s44fFUnHsWWjLD2lB0Cw3vo_Ct9PnVg5cO4";
 
 const MediaRoom = ({ video, audio, chatId }) => {
   const userId = localStorage.getItem("user");
-  //   const [token, setToken] = useState("");
+  const [token, setToken] = useState("");
   const dispatch = useDispatch();
 
   const { isOpen } = useModal();
@@ -38,13 +37,20 @@ const MediaRoom = ({ video, audio, chatId }) => {
       // navigate("/");
       return;
     }
-    console.log(profile?.name, "name");
-    const name = `${profile?.name}`;
+  }, []);
+
+  const name = profile?.name;
+
+  console.log(profile?.name, "name");
+
+  useEffect(() => {
     (async () => {
       try {
-        const res = await fetch(`/api/livekit?room=${chatId}&username${name}`);
-        const data = await res.json();
-        // setToken(data.token);
+        const res = await url.get(
+          `/getToken?name${name}&room=${chatId}&username${name}`
+        );
+        console.log(res, "token");
+        setToken(res.data);
       } catch (error) {
         console.log(error);
       }
