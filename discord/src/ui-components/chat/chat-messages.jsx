@@ -9,6 +9,7 @@ import {
 import { format } from "date-fns";
 import { Loader2, ServerCrash } from "lucide-react";
 import { ChatItem } from "./chat-item";
+import { io } from "socket.io-client";
 
 // import { useChatQuery } from "@/hooks/use-chat-query";
 // import { useChatScroll } from "@/hooks/use-chat-scroll";
@@ -17,6 +18,7 @@ import { ChatWelcome } from "./chat-welcome";
 import url from "../../api/url";
 import { useParams } from "react-router-dom";
 import { useModal } from "../../hooks/use-modal-store";
+import useSocket from "../../hooks/useSocketHook";
 // import { useChatSocket } from "@/hooks/use-chat-socket";
 
 const DATE_FORMAT = "d MMM yyyy, HH:mm";
@@ -38,7 +40,7 @@ export const ChatMessages = ({
   const updateKey = `chat:${chatId}:messages:update`;
 
   const chatRef = useRef(null);
-  const bottomRef = useRef;
+  const bottomRef = useRef(null);
 
   const { isOpen } = useModal();
 
@@ -49,13 +51,18 @@ export const ChatMessages = ({
 
   const [currentPage, setCurrentPage] = useState(1);
   const [hasNextPage, setHasNextPage] = useState(true);
-  const [messages, setMessages] = useState([]);
+  const [msgs, setMsgs] = useState([]);
   const params = useParams();
 
   const { channelId, id } = params;
 
   const [loadingMore, setLoadingMore] = useState(false);
   const [initialScrollDone, setInitialScrollDone] = useState(false);
+
+  const { connected, messages, sendMessage } = useSocket(
+    "http://localhost:6060"
+  );
+  const socketRef = useRef(null);
 
   // All messages
   const getMessages = async () => {
@@ -75,7 +82,7 @@ export const ChatMessages = ({
       const endpoint = `${apiUrl}?${queryParams}`;
 
       const response = await url.get(endpoint);
-      setMessages((prevMessages) => {
+      setMsgs((prevMessages) => {
         const existingIds = new Set(prevMessages.map((message) => message._id));
         const newMessages = response.data.filter(
           (message) => !existingIds.has(message._id)
@@ -132,15 +139,41 @@ export const ChatMessages = ({
 
   useEffect(() => {
     const chatElement = chatRef.current;
-    if (chatElement && messages.length > 0 && !initialScrollDone) {
+    if (chatElement && msgs.length > 0 && !initialScrollDone) {
       chatElement.scrollTop = chatElement.scrollHeight;
       setInitialScrollDone(true);
     }
+  }, [msgs]);
+
+  // Scroll to bottom when messages change
+  useEffect(() => {
+    if (bottomRef.current) {
+      bottomRef.current.scrollIntoView({ behavior: "smooth" });
+    }
   }, [messages]);
 
+  console.log(messages);
+
   useEffect(() => {
-    getMessages();
-  }, []);
+    // Initialize the socket connection
+    socketRef.current = io("http://localhost:6060"); // Replace with your server URL
+
+    // Listen for the event from the backend
+    socketRef.current.on(`chat:${channelId}:messages`, (newMessage) => {
+      setMsgs((prevMessages) => [newMessage, ...prevMessages]);
+      console.log("New message received:", newMessage);
+    });
+
+    // Cleanup when the component unmounts
+    return () => {
+      if (socketRef.current) {
+        socketRef.current.off(`chat:${channelId}:messages`);
+        socketRef.current.disconnect();
+      }
+    };
+  }, [channelId, messages]);
+
+  console.log(msgs);
 
   if (status.loading) {
     return (
@@ -179,7 +212,7 @@ export const ChatMessages = ({
       ) : null}
 
       <div className="flex flex-col-reverse mt-auto">
-        {messages?.map((message, i) => (
+        {msgs?.map((message, i) => (
           <Fragment key={i}>
             <ChatItem
               key={message._id}
@@ -198,7 +231,7 @@ export const ChatMessages = ({
           </Fragment>
         ))}
       </div>
-      {/* <div ref={bottomRef} /> */}
+      <div ref={bottomRef} />
     </div>
   );
 };

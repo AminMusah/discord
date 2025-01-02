@@ -11,51 +11,25 @@ import {
 import "@livekit/components-styles";
 
 import { Track } from "livekit-client";
-import { getProfile } from "../redux/apiCalls";
-import { useDispatch, useSelector } from "react-redux";
 import { Loader2 } from "lucide-react";
-import { useModal } from "../hooks/use-modal-store";
 import url from "../api/url";
 
 const serverUrl = import.meta.env.VITE_WEB_SOCKET_URL;
 
 const MediaRoom = ({ video, audio, chatId }) => {
-  const userId = localStorage.getItem("user");
   const [token, setToken] = useState("");
-  const dispatch = useDispatch();
-
-  const { isOpen } = useModal();
-
-  useEffect(() => {
-    dispatch(getProfile(userId));
-  }, [dispatch, isOpen]);
-
-  const profile = useSelector((state) => state.profile.profile);
-
-  useEffect(() => {
-    if (!profile) {
-      // navigate("/");
-      return;
-    }
-  }, []);
-
-  const name = profile?.name;
-
-  console.log(profile?.name, "name");
 
   useEffect(() => {
     (async () => {
       try {
-        const res = await url.get(
-          `/getToken?name${name}&room=${chatId}&username${name}`
-        );
+        const res = await url.get(`/getToken?room=${chatId}`);
         console.log(res, "token");
         setToken(res.data);
       } catch (error) {
         console.log(error);
       }
     })();
-  }, [profile?.name, chatId]);
+  }, [chatId]);
 
   if (token === "") {
     return (

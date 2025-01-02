@@ -18,8 +18,6 @@ const MemberIdPage = ({ profile, server }) => {
   // Check if the video parameter is set to true
   const isVideoActive = searchParams.get("video") === "true"; // This will be true if video=true is in the URL
 
-  console.log(isVideoActive, "Is Video Active");
-
   const getCurrentMember = async () => {
     try {
       const queryParams = new URLSearchParams({

@@ -15,16 +15,17 @@ const liveKitRoute = require("../routes/livekit");
 const app = express();
 
 const server = http.createServer(app); // Create an HTTP server
-const io = new Server(server, {
-  cors: {
-    origin: "*", // Update this to restrict origins in production
-    methods: ["GET", "POST"],
-  },
-});
+// const io = new Server(server, {
+//   cors: {
+//     origin: "*", // Update this to restrict origins in production
+//     methods: ["GET", "POST"],
+//   },
+// });
 
 require("../db/connect");
 
 const cors = require("cors");
+const { initializeSocket } = require("../middleware/socket");
 
 app.use(cors());
 
@@ -48,20 +49,27 @@ app.use("/api/", liveKitRoute);
 //   next();
 // });
 
-// Socket.io Configuration
-io.on("connection", (socket) => {
-  console.log("A user connected:", socket.id);
+// app.use((req, res, next) => {
+//   req.io = io; // Attach Socket.IO to the request object
+//   next();
+// });
 
-  // Example: Handling custom events
-  socket.on("message", (data) => {
-    console.log("Message received:", data);
-    io.emit("message", data); // Broadcast the message to all clients
-  });
+// // Socket.io Configuration
+// io.on("connection", (socket) => {
+//   console.log("A user connected:", socket.id);
 
-  socket.on("disconnect", () => {
-    console.log("User disconnected:", socket.id);
-  });
-});
+//   // Example: Handling custom events
+//   socket.on("message", (data) => {
+//     console.log("Message received:", data);
+//     io.emit("message", data); // Broadcast the message to all clients
+//   });
+
+//   socket.on("disconnect", () => {
+//     console.log("User disconnected:", socket.id);
+//   });
+// });
+
+initializeSocket(server);
 
 const PORT = process.env.PORT || 8000;
 

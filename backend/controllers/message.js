@@ -1,3 +1,4 @@
+const { getIo } = require("../middleware/socket");
 const Channel = require("../model/Channel");
 const Member = require("../model/Member");
 const Message = require("../model/Message");
@@ -94,9 +95,12 @@ const createMessages = async (req, res) => {
       memberId: member?._id,
     });
 
-    const channelKey = `chat:${channelId}:messages`;
+    // Emit the message to clients
+    const io = getIo();
+    io.emit(`chat:${channelId}:messages`, message);
 
-    res.socket.emit(channelKey, message);
+    console.log("Channel ID:", channelId); // Check if `channelId` is valid
+    console.log("New Message:", message); // Ensure the message is created successfully
 
     res.status(200).json(message);
   } catch (error) {
@@ -212,9 +216,9 @@ const updateMessage = async (req, res) => {
       );
     }
 
-    const updateKey = `chat:${channelId}:updatedmessages`;
+    const io = getIo();
 
-    // res.socket.emit(updateKey, updateKey);
+    io.emit(`chat:${channelId}:updatedmessages`, msg);
 
     res.status(200).json(msg);
   } catch (error) {
