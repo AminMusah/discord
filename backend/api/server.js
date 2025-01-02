@@ -15,12 +15,6 @@ const liveKitRoute = require("../routes/livekit");
 const app = express();
 
 const server = http.createServer(app); // Create an HTTP server
-// const io = new Server(server, {
-//   cors: {
-//     origin: "*", // Update this to restrict origins in production
-//     methods: ["GET", "POST"],
-//   },
-// });
 
 require("../db/connect");
 
@@ -42,32 +36,6 @@ app.use("/api/", messageRoute);
 app.use("/api/", messagesRoute);
 app.use("/api/", conversationRoute);
 app.use("/api/", liveKitRoute);
-
-// Middleware to attach socket to the request object
-// app.use((req, res, next) => {
-//   req.socket = io.sockets.connected[req.headers["socket-id"]];
-//   next();
-// });
-
-// app.use((req, res, next) => {
-//   req.io = io; // Attach Socket.IO to the request object
-//   next();
-// });
-
-// // Socket.io Configuration
-// io.on("connection", (socket) => {
-//   console.log("A user connected:", socket.id);
-
-//   // Example: Handling custom events
-//   socket.on("message", (data) => {
-//     console.log("Message received:", data);
-//     io.emit("message", data); // Broadcast the message to all clients
-//   });
-
-//   socket.on("disconnect", () => {
-//     console.log("User disconnected:", socket.id);
-//   });
-// });
 
 initializeSocket(server);
 
