@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useModal } from "../../hooks/use-modal-store";
 import { getMemberServers } from "../../redux/apiCalls";
 import ServerAction from "./ServerAction";
-import { ServerItem } from "./servers";
+import ServerItem from "./ServerItem";
 
 const Sidebar = ({ profile }) => {
   const { isOpen } = useModal();
