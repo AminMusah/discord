@@ -159,10 +159,13 @@ export const ChatMessages = ({
     socketRef.current = io("http://localhost:6060"); // Replace with your server URL
 
     // Listen for the event from the backend
-    socketRef.current.on(`chat:${channelId}:messages`, (newMessage) => {
-      setMsgs((prevMessages) => [newMessage, ...prevMessages]);
-      console.log("New message received:", newMessage);
-    });
+    socketRef.current.on(
+      `chat:${channelId}:messages` || `chat:${channelId}:updatedmessages`,
+      (newMessage) => {
+        setMsgs((prevMessages) => [newMessage, ...prevMessages]);
+        console.log("New message received:", newMessage);
+      }
+    );
 
     // Cleanup when the component unmounts
     return () => {

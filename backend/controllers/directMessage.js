@@ -3,6 +3,7 @@ const Profile = require("../model/Profile");
 const Conversation = require("../model/Conversation");
 const Message = require("../model/Message");
 const Member = require("../model/Member");
+const { getIo } = require("../middleware/socket");
 
 const getMessages = async (req, res) => {
   try {
@@ -93,9 +94,9 @@ const createDirectMessage = async (req, res) => {
       memberId: member._id,
     });
 
-    const channelKey = `chat:${conversationId}:messages`;
-    // Assuming you have access to the Socket.io server instance
-    // io.emit(channelKey, message);
+    const io = getIo();
+
+    io.emit(`chat:${conversationId}:messages`, msg);
 
     res.status(200).json({ message: "chat created!", data: message });
   } catch (error) {
@@ -206,9 +207,9 @@ const updateMessage = async (req, res) => {
       );
     }
 
-    const updateKey = `chat:${conversationId}:updatedmessages`;
+    const io = getIo();
 
-    // res.socket.emit(updateKey, updateKey);
+    io.emit(`chat:${conversationId}:updatedmessages`, msg);
 
     res.status(200).json(msg);
   } catch (error) {
