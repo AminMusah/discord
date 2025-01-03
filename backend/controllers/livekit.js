@@ -14,7 +14,7 @@ const createToken = async (req, res) => {
     const roomName = `${room}`;
     // Identifier to be used for participant.
     // It's available as LocalParticipant.identity with livekit-client SDK
-    const participantName = `${profile?.name} || participant`;
+    const participantName = `${profile?.name}` || "participant";
 
     const at = new AccessToken(
       process.env.LIVEKIT_API_KEY,

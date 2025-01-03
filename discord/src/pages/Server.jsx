@@ -1,17 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import Sidebar from "../ui-components/navigation/Sidebar";
 import { ModalProvider } from "../ui-components/providers/modal-provider";
 import ServerId from "./ServerId";
 import { useDispatch, useSelector } from "react-redux";
-import { getProfiles, getProfile } from "../redux/apiCalls";
-import { useNavigate } from "react-router-dom";
-import Channel from "./Channel";
+import { getProfile } from "../redux/apiCalls";
+
 import { useModal } from "../hooks/use-modal-store";
-import url from "../api/url";
 
 const Server = () => {
   const userId = localStorage.getItem("user");
+  const [isMounted, setIsMounted] = useState(false);
 
   const { isOpen } = useModal();
 
@@ -29,9 +27,16 @@ const Server = () => {
     }
   }, []);
 
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) {
+    return null;
+  }
+
   return (
     <div>
-      {" "}
       <div className="h-full">
         <div className=" md:flex h-full w-[72px] z-30 flex-col fixed inset-y-0">
           <ModalProvider />

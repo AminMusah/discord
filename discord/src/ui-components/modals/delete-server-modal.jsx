@@ -29,7 +29,7 @@ export const DeleteServerModal = () => {
       await url.delete(`/server/${server?._id}`);
 
       onClose();
-      navigate("/");
+      // navigate("/");
     } catch (error) {
       console.log(error);
     } finally {

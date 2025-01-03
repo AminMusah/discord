@@ -148,7 +148,7 @@ export const ChatMessages = ({
     if (bottomRef.current) {
       bottomRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [msgs]);
+  }, [messages]);
 
   useEffect(() => {
     // Initialize the socket connection
@@ -174,8 +174,6 @@ export const ChatMessages = ({
       }
     };
   }, [channelId, messages]);
-
-  console.log(msgs);
 
   if (status.loading) {
     return (
