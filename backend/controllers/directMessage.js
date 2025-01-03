@@ -94,10 +94,12 @@ const createDirectMessage = async (req, res) => {
       memberId: member._id,
     });
 
-    const populatedMessage = await Message.findById(message._id).populate({
-      path: "memberId",
-      populate: { path: "profile" },
-    });
+    const populatedMessage = await Message.findById(message._id)
+      .populate({
+        path: "memberId",
+        populate: { path: "profile" },
+      })
+      .populate("conversationId");
 
     const io = getIo();
 
@@ -212,10 +214,12 @@ const updateMessage = async (req, res) => {
       );
     }
 
-    const populatedMessage = await Message.findById(msg._id).populate({
-      path: "memberId",
-      populate: { path: "profile" },
-    });
+    const populatedMessage = await Message.findById(msg._id)
+      .populate({
+        path: "memberId",
+        populate: { path: "profile" },
+      })
+      .populate("conversationId");
 
     const io = getIo();
 
