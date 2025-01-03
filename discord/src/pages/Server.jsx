@@ -28,12 +28,8 @@ const Server = () => {
   }, []);
 
   useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  if (!isMounted) {
-    return null;
-  }
+    setIsMounted(!isMounted);
+  }, [isMounted]);
 
   return (
     <div>
