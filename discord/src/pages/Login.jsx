@@ -22,9 +22,9 @@ const SignIn = () => {
       localStorage.setItem("user", userId);
 
       if (login.data.user.servers.length > 0) {
-        navigate(`/server/${login.data.user.servers[0]}`);
+        window.location.href = `/server/${login.data.user.servers[0]}`;
       } else {
-        navigate("/server");
+        window.location.href = "/server";
       }
       toast.success("Logged In Successfully!!");
     } catch (error) {

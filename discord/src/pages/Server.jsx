@@ -9,7 +9,6 @@ import { useModal } from "../hooks/use-modal-store";
 
 const Server = () => {
   const userId = localStorage.getItem("user");
-  const [isMounted, setIsMounted] = useState(false);
 
   const { isOpen } = useModal();
 
@@ -27,9 +26,7 @@ const Server = () => {
     }
   }, []);
 
-  useEffect(() => {
-    setIsMounted(!isMounted);
-  }, [isMounted]);
+  console.log(profile, "p");
 
   return (
     <div>
