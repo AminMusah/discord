@@ -1,25 +1,14 @@
-import {
-  Fragment,
-  useRef,
-  ElementRef,
-  useState,
-  useEffect,
-  useCallback,
-} from "react";
 import { format } from "date-fns";
 import { Loader2, ServerCrash } from "lucide-react";
-import { ChatItem } from "./chat-item";
-import { io } from "socket.io-client";
-
-// import { useChatQuery } from "@/hooks/use-chat-query";
-// import { useChatScroll } from "@/hooks/use-chat-scroll";
-
-import { ChatWelcome } from "./chat-welcome";
-import url from "../../api/url";
+import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
+import { io } from "socket.io-client";
+import url from "../../api/url";
+import production from "../../base";
 import { useModal } from "../../hooks/use-modal-store";
 import useSocket from "../../hooks/useSocketHook";
-import production from "../../base";
+import { ChatItem } from "./chat-item";
+import { ChatWelcome } from "./chat-welcome";
 
 const DATE_FORMAT = "d MMM yyyy, HH:mm";
 
@@ -148,11 +137,10 @@ export const ChatMessages = ({
     if (bottomRef.current) {
       bottomRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [messages]);
+  }, [data, messages]);
 
   useEffect(() => {
-    // Initialize the socket connection
-    socketRef.current = io(`${production}`); // Replace with your server URL
+    socketRef.current = io(`${production}`);
 
     // Listen for the event from the backend
     socketRef.current.on(
@@ -177,12 +165,17 @@ export const ChatMessages = ({
 
   useEffect(() => {
     if (data?.res?.data) {
-      console.log(data?.res?.data, "hy");
-      setMsgs((prevMessages) => [data?.res?.data, ...prevMessages]);
+      setMsgs((prevMessages) => {
+        const isDuplicate = prevMessages.some(
+          (msg) => msg._id === data?.res?.data._id
+        );
+        if (!isDuplicate) {
+          return [data?.res?.data, ...prevMessages];
+        }
+        return prevMessages;
+      });
     }
   }, [data]);
-
-  console.log(msgs, "new msgs");
 
   if (status.loading) {
     return (
