@@ -10,7 +10,7 @@ import EmojiPicker from "../emoji-picker";
 import production from "../../base";
 
 export const ChatInput = ({ apiUrl, query, name, type }) => {
-  const { onOpen } = useModal();
+  const { onOpen, getData } = useModal();
   const [loading, setLoading] = useState(false);
   const { connected, messages, sendMessage } = useSocket(`${production}`);
   const [input, setInput] = useState("");
@@ -42,7 +42,9 @@ export const ChatInput = ({ apiUrl, query, name, type }) => {
 
       const endpoint = `${apiUrl}?${queryParams}`;
 
-      await url.post(endpoint, { content: value });
+      const res = await url.post(endpoint, { content: value });
+      console.log(res, "res");
+      getData("getMessage", { res });
     } catch (error) {
       console.log(error);
     } finally {

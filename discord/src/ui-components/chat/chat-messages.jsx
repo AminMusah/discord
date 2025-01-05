@@ -42,7 +42,7 @@ export const ChatMessages = ({
   const chatRef = useRef(null);
   const bottomRef = useRef(null);
 
-  const { isOpen } = useModal();
+  const { isOpen, messageType = type, data } = useModal();
 
   const [status, setStatus] = useState({
     loading: false,
@@ -174,6 +174,15 @@ export const ChatMessages = ({
       }
     };
   }, [channelId, messages]);
+
+  useEffect(() => {
+    if (data?.res?.data) {
+      console.log(data?.res?.data, "hy");
+      setMsgs((prevMessages) => [data?.res?.data, ...prevMessages]);
+    }
+  }, [data]);
+
+  console.log(msgs, "new msgs");
 
   if (status.loading) {
     return (
