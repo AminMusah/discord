@@ -106,7 +106,7 @@ const createMessages = async (req, res) => {
     const io = getIo();
     io.emit(`chat:${channelId}:messages`, populatedMessage);
 
-    res.status(200).json(message);
+    res.status(200).json(populatedMessage);
   } catch (error) {
     res.status(500).send(error);
     console.log(error);
