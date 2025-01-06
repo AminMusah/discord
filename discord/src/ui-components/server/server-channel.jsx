@@ -45,7 +45,7 @@ export const ServerChannel = ({ channel, role, server, fisrtChannel }) => {
     if (server && channel && server?._id && channel?._id) {
       navigate(`/server/${server?._id}/channel/${fisrtChannel?.[0]?._id}`);
     }
-  }, [server, channel]);
+  }, [server, fisrtChannel?.[0]?._id]);
 
   return (
     <button

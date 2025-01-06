@@ -20,10 +20,10 @@ const Channel = ({ server, profile }) => {
   );
 
   // Check if profile members are in the server
-  const profileMemberIds = profile.members?.map((member) => member?._id);
-  const serverMemberIds = server.members?.map((member) => member?._id);
+  const profileMemberIds = profile?.members?.map((member) => member?._id);
+  const serverMemberIds = server?.members?.map((member) => member?._id);
 
-  const membersInServer = profile.members?.filter((member) =>
+  const membersInServer = profile?.members?.filter((member) =>
     serverMemberIds?.includes(member?._id)
   );
 

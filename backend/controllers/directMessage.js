@@ -94,7 +94,7 @@ const createDirectMessage = async (req, res) => {
       memberId: member._id,
     });
 
-    const populatedMessage = await Message.findById(message._id)
+    const populatedMessage = await DirectMessage.findById(message._id)
       .populate({
         path: "memberId",
         populate: { path: "profile" },
@@ -105,7 +105,7 @@ const createDirectMessage = async (req, res) => {
 
     io.emit(`chat:${conversationId}:messages`, populatedMessage);
 
-    res.status(200).json({ message: "chat created!", data: message });
+    res.status(200).json(populatedMessage);
   } catch (error) {
     res.status(500).send(error);
   }
@@ -214,7 +214,7 @@ const updateMessage = async (req, res) => {
       );
     }
 
-    const populatedMessage = await Message.findById(msg._id)
+    const populatedMessage = await DirectMessage.findById(msg._id)
       .populate({
         path: "memberId",
         populate: { path: "profile" },
@@ -225,7 +225,7 @@ const updateMessage = async (req, res) => {
 
     io.emit(`chat:${conversationId}:updatedmessages`, populatedMessage);
 
-    res.status(200).json(msg);
+    res.status(200).json(populatedMessage);
   } catch (error) {
     console.error("[UPDATE_MESSAGE]", error);
     res.status(500).json({ error: "Internal Server Error" });

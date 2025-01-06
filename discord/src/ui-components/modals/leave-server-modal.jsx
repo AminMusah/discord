@@ -28,7 +28,7 @@ export const LeaveServerModal = () => {
       const res = await url.patch(`/server/${server?._id}/leave`);
       console.log(res);
       onClose();
-      navigate("/");
+      navigate(`/`);
     } catch (error) {
       console.log(error);
     } finally {

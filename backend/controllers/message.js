@@ -231,7 +231,7 @@ const updateMessage = async (req, res) => {
 
     io.emit(`chat:${channelId}:updatedmessages`, populatedMessage);
 
-    res.status(200).json(msg);
+    res.status(200).json(populatedMessage);
   } catch (error) {
     console.error("[UPDATE_MESSAGE]", error);
     res.status(500).json({ error: "Internal Server Error" });

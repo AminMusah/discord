@@ -134,9 +134,53 @@ const createInviteLink = async (req, res) => {
 };
 
 // create member in server
+// const createMemberInServer = async (req, res) => {
+//   try {
+//     const { _id } = req.user;
+//     const { inviteCode } = req.body;
+
+//     if (!_id) {
+//       return res.status(401).send({ message: "Unauthorized" });
+//     }
+
+//     // Validate invite code
+//     if (!inviteCode) {
+//       return res.status(400).send({ message: "Invite code is required" });
+//     }
+
+//     // Find the server by invite code
+//     const server = await Server.findOne({ inviteCode });
+
+//     // Check if the server exists
+//     if (!server) {
+//       return res.status(404).send({ message: "Server not found" });
+//     }
+
+//     // Create a member for the server
+//     const member = new Member({
+//       profile: _id,
+//       server: server._id,
+//       role: "GUEST",
+//     });
+
+//     await member.save();
+//     server.members.push(member._id);
+
+//     // Save the updated server with channel and member references
+//     await server.save();
+
+//     // Send success response
+//     res.status(200).json(server);
+//   } catch (error) {
+//     // Handle errors gracefully
+//     console.error("Error creating member in server:", error);
+//     res.status(500).send(error);
+//   }
+// };
+// create member in server
 const createMemberInServer = async (req, res) => {
   try {
-    const { _id } = req.user;
+    const { _id } = req.user; // Profile ID from the authenticated user
     const { inviteCode } = req.body;
 
     if (!_id) {
@@ -156,7 +200,19 @@ const createMemberInServer = async (req, res) => {
       return res.status(404).send({ message: "Server not found" });
     }
 
-    // Create a member for the server
+    // Check if the member already exists for the profile and server
+    const existingMember = await Member.findOne({
+      profile: _id,
+      server: server._id,
+    });
+
+    if (existingMember) {
+      return res
+        .status(200)
+        .send({ message: "Member already exists", member: existingMember });
+    }
+
+    // Create a new member for the server
     const member = new Member({
       profile: _id,
       server: server._id,
@@ -166,11 +222,13 @@ const createMemberInServer = async (req, res) => {
     await member.save();
     server.members.push(member._id);
 
-    // Save the updated server with channel and member references
+    // Save the updated server with member reference
     await server.save();
+    console.log(member, "member");
+    console.log(existingMember, "exixting member");
 
     // Send success response
-    res.status(200).json(server);
+    res.status(200).json({ message: "Member created successfully", server });
   } catch (error) {
     // Handle errors gracefully
     console.error("Error creating member in server:", error);

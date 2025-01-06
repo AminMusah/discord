@@ -36,17 +36,9 @@ const MemberIdPage = ({ profile, server }) => {
     getCurrentMember();
   }, []);
 
-  // useEffect(() => {
-  //   if (!currentMember) {
-  //     navigate(`/server/${id}`);
-  //   }
-  // }, [
-  //   currentMember
-  //   , id, navigate]);
-
   const getOrCreateConversation = async (memberOneId, memberTwoId) => {
     try {
-      const response = await url.post(`conversation`, {
+      const response = await url.post(`/conversation`, {
         memberOneId,
         memberTwoId,
       });
@@ -59,12 +51,6 @@ const MemberIdPage = ({ profile, server }) => {
   useEffect(() => {
     getOrCreateConversation(currentMember, memberId);
   }, [currentMember, memberId]);
-
-  // useEffect(() => {
-  //   if (!conversation || conversation === null) {
-  //     navigate(`/server/${id}`);
-  //   }
-  // }, [conversation, id, navigate]);
 
   let memberOneId, memberTwoId;
   if (conversation) {
