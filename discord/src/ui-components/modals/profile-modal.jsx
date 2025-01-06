@@ -37,8 +37,6 @@ export const ProfileModal = () => {
 
   const profile = useSelector((state) => state.profile.profile);
 
-  console.log(profile, "p");
-
   const LogOut = () => {
     onClose();
     localStorage.clear();
