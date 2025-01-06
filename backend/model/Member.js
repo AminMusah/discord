@@ -22,4 +22,6 @@ const memberSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+memberSchema.index({ profile: 1, server: 1 }, { unique: true });
+
 module.exports = mongoose.model("Member", memberSchema);

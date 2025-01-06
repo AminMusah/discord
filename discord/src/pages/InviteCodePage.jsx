@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import url from "../api/url";
 import { toast, Toaster } from "sonner";
+import { Button } from "@/components/ui/button";
 
 const InviteCodePage = () => {
   const userId = localStorage.getItem("user");
@@ -11,72 +12,59 @@ const InviteCodePage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
+    if (!userId) navigate("/auth/register"); // Redirect if not logged in
     dispatch(getProfile(userId));
     dispatch(getServers());
-  }, [dispatch]);
+  }, [dispatch, userId]);
 
   const profile = useSelector((state) => state.profile.profile);
   const servers = useSelector((state) => state.server.server);
 
-  console.log(servers);
-
   useEffect(() => {
-    if (!userId) {
-      return navigate("/auth/register"); // Redirect to sign-in page
-    }
-  }, []);
+    if (!profile) navigate("/"); // Redirect if no profile
+  }, [profile, navigate]);
 
-  useEffect(() => {
-    if (!profile) {
-      return navigate("/");
-    }
-  }, [params.id]);
-
-  if (!params.id) {
-    return navigate("/");
-  }
-
-  console.log(profile);
-
-  const existingServer = profile?.servers?.find((server) => {
-    return (
+  const existingServer = profile?.servers?.find(
+    (server) =>
       server.inviteCode === params.id && server.members.includes(server.profile)
-    );
-  });
+  );
 
   if (existingServer) {
-    return navigate(`/server/${existingServer?._id}`);
+    navigate(`/server/${existingServer?._id}`);
+    return null;
   }
 
-  const server = servers?.find((server) => {
-    return server.inviteCode === params.id;
-  });
+  const server = servers?.find((s) => s.inviteCode === params.id);
 
   const onNew = async () => {
+    if (loading) return; // Prevent duplicate requests
+    setLoading(true);
+
     try {
       const response = await url.post(`/server/createMember`, {
         inviteCode: server?.inviteCode,
       });
-      console.log(response);
       navigate(`/server/${server?._id}`);
     } catch (error) {
-      console.log(error);
-      toast.error(error.response.data.message);
+      console.error(error);
+      toast.error(error.response?.data?.message || "Error joining server");
+    } finally {
+      setLoading(false);
     }
   };
 
-  if (server) {
-    onNew();
-  }
-
-  // Check if both servers and profile are empty
-  if (!servers.length && !profile) {
-    return navigate("/"); // Redirect to sign-in page
-  }
-
   return (
     <>
+      {server ? (
+        <Button onClick={onNew} disabled={loading}>
+          {loading ? "Joining..." : "Join Server"}
+        </Button>
+      ) : (
+        <p>Invalid invite code</p>
+      )}
       <Toaster position="top-center" richColors />
     </>
   );

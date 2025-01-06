@@ -183,54 +183,41 @@ const createMemberInServer = async (req, res) => {
     const { _id } = req.user; // Profile ID from the authenticated user
     const { inviteCode } = req.body;
 
-    if (!_id) {
-      return res.status(401).send({ message: "Unauthorized" });
-    }
-
-    // Validate invite code
-    if (!inviteCode) {
+    if (!_id) return res.status(401).send({ message: "Unauthorized" });
+    if (!inviteCode)
       return res.status(400).send({ message: "Invite code is required" });
-    }
 
     // Find the server by invite code
     const server = await Server.findOne({ inviteCode });
+    if (!server) return res.status(404).send({ message: "Server not found" });
 
-    // Check if the server exists
-    if (!server) {
-      return res.status(404).send({ message: "Server not found" });
-    }
-
-    // Check if the member already exists for the profile and server
+    // Check if member already exists
     const existingMember = await Member.findOne({
       profile: _id,
       server: server._id,
     });
-
     if (existingMember) {
-      return res
-        .status(200)
-        .send({ message: "Member already exists", member: existingMember });
+      console.log(existingMember, "existing member");
+      return res.status(200).json({ message: "Member already exists", server });
     }
 
-    // Create a new member for the server
+    // Create new member
     const member = new Member({
       profile: _id,
       server: server._id,
       role: "GUEST",
     });
-
     await member.save();
-    server.members.push(member._id);
 
-    // Save the updated server with member reference
-    await server.save();
-    console.log(member, "member");
-    console.log(existingMember, "exixting member");
+    // Add member to server
+    if (!server.members.includes(member._id)) {
+      server.members.push(member._id);
+      await server.save();
+    }
 
-    // Send success response
+    console.log(member, "newly created member");
     res.status(200).json({ message: "Member created successfully", server });
   } catch (error) {
-    // Handle errors gracefully
     console.error("Error creating member in server:", error);
     res.status(500).send(error);
   }
