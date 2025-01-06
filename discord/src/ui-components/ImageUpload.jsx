@@ -5,7 +5,7 @@ import { File, ImagePlus, Trash, Upload, X } from "lucide-react";
 import firebase from "../../firebase/firebase";
 import "firebase/compat/storage";
 
-const ImageUpload = ({ setFile, file, endpoint }) => {
+const ImageUpload = ({ setFile, file, endpoint, submit }) => {
   const [isMounted, setIsMounted] = useState(false);
   const [selectedFile, setSelectedFile] = useState("");
   const [loading, setLoading] = useState("");
@@ -74,6 +74,7 @@ const ImageUpload = ({ setFile, file, endpoint }) => {
           setSelectedFile(downloadURL);
           setFile(downloadURL);
           checkFileTypeFromUrl(downloadURL);
+          submit(downloadURL);
         });
       }
     );
@@ -233,10 +234,12 @@ const ImageUpload = ({ setFile, file, endpoint }) => {
             <h3 className="mt-2 text-sm font-semibold text-gray-900">
               {uploading
                 ? "uploading...please wait :)"
-                : endpoint === "serverImage" || endpoint === "profileImage"
+                : endpoint === "serverImage"
                 ? "Upload an image"
                 : endpoint === "messageFile"
                 ? "Upload a file"
+                : endpoint === "profileImage"
+                ? ""
                 : ""}
             </h3>
           </div>

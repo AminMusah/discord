@@ -16,10 +16,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { getProfile } from "../../redux/apiCalls";
 import ImageUpload from "../ImageUpload";
+import url from "../../api/url";
+import { toast } from "sonner";
 
 export const ProfileModal = () => {
   const { onOpen, isOpen, onClose, type, data } = useModal();
   const [file, setFile] = useState("");
+  const [loading, setLoading] = useState(false);
   const isModalOpen = isOpen && type === "profile";
   const navigation = useNavigate();
 
@@ -42,6 +45,23 @@ export const ProfileModal = () => {
     navigation("/");
   };
 
+  const submit = async (value) => {
+    try {
+      setLoading(true);
+
+      const endpoint = `/profile`;
+
+      const res = await url.patch(endpoint, { imageUrl: value });
+      console.log(res);
+      toast.success("Profile updated successfully");
+    } catch (error) {
+      console.log(error);
+      console.log(error, "e");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <Dialog open={isModalOpen} onOpenChange={onClose}>
       <DialogContent className="bg-white text-black p-0 overflow-hidden">
@@ -56,8 +76,11 @@ export const ProfileModal = () => {
               endpoint="profileImage"
               setFile={setFile}
               file={file}
+              submit={submit}
             />
-
+            {loading && (
+              <span className="text-xs">Uploading... please wait :)</span>
+            )}
             <div className="flex items-center px-4 py-1 h-8 rounded-full bg-gray-100 transition-all duration-300">
               <span className="mr-1 tex-xs">👋 </span>
               <span className="text-xs"> {profile?.name}</span>
