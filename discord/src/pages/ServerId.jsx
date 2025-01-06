@@ -33,7 +33,11 @@ const ServerId = ({ profile }) => {
       </div>
       <div className="h-full md:pl-60">
         {channelId ? (
-          <Channel server={server} profile={profile} channelId={channelId} />
+          <Channel
+            server={server}
+            profile={profile}
+            channelId={channelId || server?.profile?.channels[0]}
+          />
         ) : (
           <MemberIdPage server={server} profile={profile} />
         )}

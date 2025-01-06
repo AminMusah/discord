@@ -41,6 +41,12 @@ export const ServerChannel = ({ channel, role, server }) => {
     onOpen(action, { channel, server });
   };
 
+  useEffect(() => {
+    if (server && channel && server?._id && channel?._id) {
+      navigate(`/server/${server?._id}/channel/${channel?._id}`);
+    }
+  }, [server, channel]);
+
   return (
     <button
       onClick={onClick}
