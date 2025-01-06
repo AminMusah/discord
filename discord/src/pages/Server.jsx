@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getProfile } from "../redux/apiCalls";
 import Sidebar from "../ui-components/navigation/Sidebar";
 import { ModalProvider } from "../ui-components/providers/modal-provider";
 import ServerId from "./ServerId";
-import { useDispatch, useSelector } from "react-redux";
-import { getProfile } from "../redux/apiCalls";
 
 import { useModal } from "../hooks/use-modal-store";
 
@@ -25,8 +25,6 @@ const Server = () => {
       navigate("/");
     }
   }, []);
-
-  console.log(profile, "p");
 
   return (
     <div>
