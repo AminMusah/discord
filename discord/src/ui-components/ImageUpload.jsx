@@ -21,7 +21,7 @@ const ImageUpload = ({ setFile, file, endpoint }) => {
 
   const checkFileTypeFromUrl = (url) => {
     // Extract the file extension from the URL
-    const fileExtension = url.split(".").pop().split("?")[0];
+    const fileExtension = url?.split(".").pop()?.split("?")[0];
 
     // Determine the file type based on the extension
     if (["jpg", "jpeg", "png", "gif"].includes(fileExtension)) {
@@ -80,8 +80,9 @@ const ImageUpload = ({ setFile, file, endpoint }) => {
   };
 
   const handleUploadButtonClick = () => {
-    // Trigger the file input click when the button is clicked
-    fileInputRef.current.click();
+    if (fileInputRef.current) {
+      fileInputRef.current.click(); // This should work if the ref is correct
+    }
   };
 
   if (!isMounted) {
@@ -162,11 +163,64 @@ const ImageUpload = ({ setFile, file, endpoint }) => {
             />
           </div>
         </div>
+      ) : endpoint === "profileImage" &&
+        (selectedFile.length > 0 || file?.length > 0) ? (
+        <div
+          className={`relative group flex justify-center cursor-pointer mx-3 h-[88px] w-[88px] rounded-full group-hover:rounded-[16px] transition-all overflow-hidden border border-black`}
+          onClick={(e) => {
+            e.preventDefault();
+            handleUploadButtonClick();
+          }}
+        >
+          <div className="absolute z-40 inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+            {selectedFile === "" ? (
+              <Upload />
+            ) : (
+              <Button
+                type="button"
+                onClick={() => {
+                  setSelectedFile("");
+                  setFile("");
+                }}
+              >
+                <Trash className="h-4 w-4" color="red" />
+              </Button>
+            )}
+          </div>
+          <div className="relative w-[200px] h-[200px] rounded-md overflow-hidden">
+            <img
+              className="object-cover transition-transform group-hover:scale-105"
+              alt="Image"
+              src={selectedFile || file}
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 1200px"
+            />
+          </div>
+        </div>
       ) : (
-        <div className="pt-6">
+        <div className={`pt-6 ${endpoint === "profileImage" && "pt-0"}`}>
           <div className="text-center">
             {uploading ? (
               ""
+            ) : endpoint === "profileImage" ? (
+              <div
+                className="relative group flex justify-center cursor-pointer mx-3 h-[88px] w-[88px] rounded-full group-hover:rounded-[16px] transition-all overflow-hidden border border-black"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleUploadButtonClick();
+                }}
+              >
+                <div className="relative max-w-[200px] h-[200px] rounded-md overflow-hidden">
+                  <img
+                    className="object-cover transition-transform group-hover:scale-105"
+                    alt="Image"
+                    src={
+                      file ||
+                      "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg"
+                    }
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 1200px"
+                  />
+                </div>
+              </div>
             ) : (
               <Upload
                 className="mx-auto h-12 w-12 text-gray-400 cursor-pointer"
@@ -179,31 +233,28 @@ const ImageUpload = ({ setFile, file, endpoint }) => {
             <h3 className="mt-2 text-sm font-semibold text-gray-900">
               {uploading
                 ? "uploading...please wait :)"
-                : endpoint === "serverImage"
+                : endpoint === "serverImage" || endpoint === "profileImage"
                 ? "Upload an image"
                 : endpoint === "messageFile"
                 ? "Upload a file"
                 : ""}
             </h3>
-
-            <div className="mt-6">
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept={
-                  endpoint === "serverImage"
-                    ? "image/*"
-                    : endpoint === "messageFile"
-                    ? "*/*"
-                    : ""
-                }
-                onChange={onFileSelected}
-                className="hidden"
-              />
-            </div>
           </div>
         </div>
       )}
+      <input
+        type="file"
+        ref={fileInputRef}
+        accept={
+          endpoint === "serverImage"
+            ? "image/*"
+            : endpoint === "messageFile"
+            ? "*/*"
+            : ""
+        }
+        onChange={onFileSelected}
+        className="hidden"
+      />
     </div>
   );
 };
