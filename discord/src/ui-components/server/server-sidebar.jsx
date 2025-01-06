@@ -1,25 +1,14 @@
-import {
-  Hash,
-  Mic,
-  ShieldAlert,
-  ShieldCheck,
-  Video,
-  Settings,
-} from "lucide-react";
+import { Mic, Settings } from "lucide-react";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import ServerHeader from "./server-header";
 import image from "../../assets/guillermo-diaz-fs6zYhHyzvI-unsplash.jpg";
-import { UserAvatar } from "../user-avatar";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
-import { getProfile, getServer } from "../../redux/apiCalls";
-import { ServerSection } from "./server-section";
-import { ServerChannel } from "./server-channel";
 import { useModal } from "../../hooks/use-modal-store";
-import { redirect } from "react-router-dom";
+import { UserAvatar } from "../user-avatar";
+import { ServerChannel } from "./server-channel";
+import ServerHeader from "./server-header";
 import { ServerMember } from "./server-member";
+import { ServerSection } from "./server-section";
 
 const typeOfChannel = {
   text: "TEXT",
@@ -133,7 +122,7 @@ const ServerSidebar = ({ server, profile }) => {
       <div className="flex justify-between items-center w-full absolute bottom-2 mx-2">
         <div className="flex">
           <UserAvatar
-            src={image}
+            src={profile?.imageUrl || image}
             className="h-8 w-8 md:h-[30px] md:w-[30px] "
           />
           <p className="text-sm mx-2">{profile?.name}</p>
