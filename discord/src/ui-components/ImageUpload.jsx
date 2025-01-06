@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { File, ImagePlus, Trash, Upload, X } from "lucide-react";
 import firebase from "../../firebase/firebase";
 import "firebase/compat/storage";
+import { toast } from "sonner";
 
 const ImageUpload = ({ setFile, file, endpoint, submit }) => {
   const [isMounted, setIsMounted] = useState(false);
@@ -47,6 +48,7 @@ const ImageUpload = ({ setFile, file, endpoint, submit }) => {
         var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         setLoading("Upload is " + progress + "% done");
         console.log("Upload is " + progress + "% done");
+        toast.info("Upload is " + progress.toFixed(2) + "% done");
         setUploading(true);
         switch (snapshot.state) {
           case firebase.storage.TaskState.PAUSED: // or 'paused'
@@ -69,6 +71,7 @@ const ImageUpload = ({ setFile, file, endpoint, submit }) => {
         // Handle successful uploads on complete
         // For instance, get the download URL: https://firebasestorage.googleapis.com/...
         uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+          toast.success("Upload is done :)");
           setLoading("");
           setUploading(false);
           setSelectedFile(downloadURL);
