@@ -48,7 +48,12 @@ export const ServerSection = ({
                 // onClick={() => onOpen("members", { server })}
                 className="text-zinc-500 hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300 transition"
               >
-                <Settings className="h-4 w-4" />
+                {role === "ADMIN" && (
+                  <Settings
+                    className="h-4 w-4"
+                    onClick={() => onOpen("members", { server })}
+                  />
+                )}
               </span>
             </TooltipTrigger>
             <TooltipContent side="top" align="center">

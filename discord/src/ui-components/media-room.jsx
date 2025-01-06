@@ -23,7 +23,6 @@ const MediaRoom = ({ video, audio, chatId }) => {
     (async () => {
       try {
         const res = await url.get(`/getToken?room=${chatId}`);
-        console.log(res, "token");
         setToken(res.data);
       } catch (error) {
         console.log(error);

@@ -12,7 +12,7 @@ import {
 import { useModal } from "../../hooks/use-modal-store";
 import { useEffect } from "react";
 
-export const ServerChannel = ({ channel, role, server }) => {
+export const ServerChannel = ({ channel, role, server, fisrtChannel }) => {
   const { onOpen, isOpen } = useModal();
   const params = useParams();
   const navigate = useNavigate();
@@ -43,7 +43,7 @@ export const ServerChannel = ({ channel, role, server }) => {
 
   useEffect(() => {
     if (server && channel && server?._id && channel?._id) {
-      navigate(`/server/${server?._id}/channel/${channel?._id}`);
+      navigate(`/server/${server?._id}/channel/${fisrtChannel?.[0]?._id}`);
     }
   }, [server, channel]);
 
