@@ -58,13 +58,26 @@ const InviteCodePage = () => {
 
   return (
     <>
-      {server ? (
-        <Button onClick={onNew} disabled={loading}>
-          {loading ? "Joining..." : "Join Server"}
-        </Button>
-      ) : (
-        <p>Invalid invite code</p>
-      )}
+      <div className="flex justify-center items-center h-screen">
+        {server ? (
+          <Button onClick={onNew} disabled={loading}>
+            {loading ? "Joining..." : "Join Server"}
+          </Button>
+        ) : (
+          <div className="flex flex-col items-center justify-center">
+            <p className="text-red-400 text-2xl mb-4">Invalid invite code :(</p>
+
+            <Button
+              onClick={() => {
+                navigate(`/server/${servers[0]?._id}`);
+              }}
+            >
+              Go back
+            </Button>
+          </div>
+        )}
+      </div>
+
       <Toaster position="top-center" richColors />
     </>
   );
