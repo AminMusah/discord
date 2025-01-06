@@ -43,7 +43,6 @@ export const ChatInput = ({ apiUrl, query, name, type }) => {
       const endpoint = `${apiUrl}?${queryParams}`;
 
       const res = await url.post(endpoint, { content: value });
-      console.log(res, "res");
       getData("getMessage", { res });
     } catch (error) {
       console.log(error);

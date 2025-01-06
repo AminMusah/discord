@@ -7,33 +7,33 @@ const useSocket = (url) => {
   const [messages, setMessages] = useState([]);
   const socketRef = useRef();
 
-  useEffect(() => {
-    // Create a new socket connection
-    const newSocket = io(url);
-    socketRef.current = newSocket;
+  // useEffect(() => {
+  //   // Create a new socket connection
+  //   const newSocket = io(url);
+  //   socketRef.current = newSocket;
 
-    // Handle connection events
-    newSocket.on("connect", () => {
-      setConnected(true);
-      console.log("Connected to socket server");
-    });
+  //   // Handle connection events
+  //   newSocket.on("connect", () => {
+  //     setConnected(true);
+  //     console.log("Connected to socket server");
+  //   });
 
-    newSocket.on("disconnect", () => {
-      setConnected(false);
-      console.log("Disconnected from socket server");
-    });
+  //   newSocket.on("disconnect", () => {
+  //     setConnected(false);
+  //     console.log("Disconnected from socket server");
+  //   });
 
-    // Example of handling incoming messages
-    newSocket.on("message", (message) => {
-      setMessages((prevMessages) => [...prevMessages, message]);
-    });
+  //   // Example of handling incoming messages
+  //   newSocket.on("message", (message) => {
+  //     setMessages((prevMessages) => [...prevMessages, message]);
+  //   });
 
-    // Clean up on unmount
-    return () => {
-      socketRef.current.close();
-      newSocket.disconnect();
-    };
-  }, [url]);
+  //   // Clean up on unmount
+  //   return () => {
+  //     socketRef.current.close();
+  //     newSocket.disconnect();
+  //   };
+  // }, [url]);
 
   // Function to send messages
   const sendMessage = (message) => {
