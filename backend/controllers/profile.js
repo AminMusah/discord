@@ -20,7 +20,7 @@ const getProfiles = async (req, res) => {
   }
 };
 
-//get user
+// get user
 const getProfile = async (req, res) => {
   try {
     const profile = await Profile.findById(req.params.id)
@@ -48,4 +48,44 @@ const getProfile = async (req, res) => {
   }
 };
 
-module.exports = { getProfiles, getProfile };
+// edit prfile
+const editProfile = async (req, res) => {
+  try {
+    const { imageUrl } = await req.body;
+
+    const { _id } = req.user;
+
+    if (!_id) {
+      return res.status(401).send({ message: "Unauthorized!!" });
+    }
+
+    // Find profile
+    const profile = await Profile.findOne({ _id });
+
+    if (!profile) {
+      return res.status(403).json({
+        error: "No profile found!",
+      });
+    }
+
+    // update the channel
+    const updateProfile = await Profile.findByIdAndUpdate(
+      { _id },
+      {
+        imageUrl,
+      },
+      {
+        new: true,
+      }
+    );
+
+    res
+      .status(200)
+      .json({ message: "Profile updated successfully", data: updateProfile });
+  } catch (error) {
+    console.error("[UPDATE_PROFILE]", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+module.exports = { getProfiles, getProfile, editProfile };
