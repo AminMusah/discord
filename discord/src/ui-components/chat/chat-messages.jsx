@@ -137,7 +137,7 @@ export const ChatMessages = ({
     if (bottomRef.current) {
       bottomRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [data]);
+  }, [data, messages]);
 
   useEffect(() => {
     socketRef.current = io(`${production}`);
@@ -161,7 +161,7 @@ export const ChatMessages = ({
         socketRef.current.disconnect();
       }
     };
-  }, [channelId]);
+  }, [channelId, messages]);
 
   useEffect(() => {
     if (data?.res?.data) {

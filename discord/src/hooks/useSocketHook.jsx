@@ -30,6 +30,7 @@ const useSocket = (url) => {
 
     // Clean up on unmount
     return () => {
+      socketRef.current.close();
       newSocket.disconnect();
     };
   }, [url]);
