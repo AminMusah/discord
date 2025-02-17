@@ -69,6 +69,8 @@ export const ChatMessages = ({
       const endpoint = `${apiUrl}?${queryParams}`;
 
       const response = await url.get(endpoint);
+
+      console.log(response, "res");
       setMsgs((prevMessages) => {
         const existingIds = new Set(prevMessages.map((message) => message._id));
         const newMessages = response.data.filter(
@@ -166,18 +168,20 @@ export const ChatMessages = ({
   // }, [channelId]);
 
   useEffect(() => {
-    if (data?.res?.data) {
+    if (data?.data) {
       setMsgs((prevMessages) => {
         const isDuplicate = prevMessages.some(
-          (msg) => msg._id === data?.res?.data._id
+          (msg) => msg._id === data?.data._id
         );
         if (!isDuplicate) {
-          return [data?.res?.data, ...prevMessages];
+          return [data.data, ...prevMessages];
         }
         return prevMessages;
       });
     }
   }, [data]);
+
+  console.log(data);
 
   if (status.loading) {
     return (
@@ -226,8 +230,12 @@ export const ChatMessages = ({
               content={message?.content}
               fileUrl={message?.fileUrl}
               deleted={message?.deleted}
-              timestamp={format(new Date(message.createdAt), DATE_FORMAT)}
-              isUpdated={message.updatedAt !== message.createdAt}
+              timestamp={
+                message?.createdAt
+                  ? format(new Date(message.createdAt), DATE_FORMAT)
+                  : format(new Date(), DATE_FORMAT)
+              }
+              isUpdated={message?.updatedAt !== message?.createdAt}
               socketUrl={socketUrl}
               socketQuery={socketQuery}
               role={role}

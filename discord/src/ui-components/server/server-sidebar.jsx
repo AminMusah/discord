@@ -40,7 +40,7 @@ const ServerSidebar = ({ server, profile }) => {
     (member) => member?.profile?._id === userId
   )?.role;
 
-  console.log(textChannels, "textChannels");
+  // console.log(textChannels, "textChannels");
 
   return (
     <div className="flex flex-col h-full text-primary w-full dark:bg-[#2B2D31] bg-[#F2F3F5]">
