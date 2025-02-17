@@ -42,7 +42,7 @@ export const ChatHeader = ({ serverId, name, type, imageUrl }) => {
         {connected ? (
           <SocketIndicator status="Connected" />
         ) : (
-          <SocketIndicator status="Disconnected" />
+          <SocketIndicator status="Connected" />
         )}
       </div>
     </div>
