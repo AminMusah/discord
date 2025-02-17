@@ -70,7 +70,7 @@ export const ChatMessages = ({
 
       const response = await url.get(endpoint);
 
-      console.log(response, "res");
+      // console.log(response, "res");
       setMsgs((prevMessages) => {
         const existingIds = new Set(prevMessages.map((message) => message._id));
         const newMessages = response.data.filter(
@@ -181,18 +181,22 @@ export const ChatMessages = ({
     }
   }, [data]);
 
-  console.log(data);
+  setTimeout(() => {
+    getMessages();
+  }, 2000);
 
-  if (status.loading) {
-    return (
-      <div className="flex flex-col flex-1 justify-center items-center">
-        <Loader2 className="h-7 w-7 text-zinc-500 animate-spin my-4" />
-        <p className="text-xs text-zinc-500 dark:text-zinc-400">
-          Loading messages...
-        </p>
-      </div>
-    );
-  }
+  // console.log(data);
+
+  // if (status.loading) {
+  //   return (
+  //     <div className="flex flex-col flex-1 justify-center items-center">
+  //       <Loader2 className="h-7 w-7 text-zinc-500 animate-spin my-4" />
+  //       <p className="text-xs text-zinc-500 dark:text-zinc-400">
+  //         Loading messages...
+  //       </p>
+  //     </div>
+  //   );
+  // }
 
   if (status.error === "error") {
     return (
@@ -210,14 +214,14 @@ export const ChatMessages = ({
       {!hasNextPage && <div className="flex-1" />}
       {hasNextPage && <ChatWelcome type={type} name={name} />}
 
-      {loadingMore ? (
+      {/* {loadingMore ? (
         <div className="flex flex-col flex-1 justify-center items-center">
           <Loader2 className="h-5 w-5 text-zinc-500 animate-spin my-4" />
           <p className="text-xs text-zinc-500 dark:text-zinc-400">
             Loading more messages...
           </p>
         </div>
-      ) : null}
+      ) : null} */}
 
       <div className="flex flex-col-reverse mt-auto">
         {msgs?.map((message, i) => (

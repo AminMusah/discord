@@ -76,7 +76,6 @@ export const ChatItem = ({
 
       const endpoint = `/messages?${queryParams}`;
       const response = await url.patch(endpoint, { content: value });
-      console.log(response, "d");
       setNewContent(response.data.content);
       setIsEditing(false);
     } catch (error) {
@@ -205,7 +204,7 @@ export const ChatItem = ({
           )}
         </div>
       </div>
-      {canDeleteMessage && (
+      {/* {canDeleteMessage && (
         <div className="hidden group-hover:flex items-center gap-x-2 absolute p-1 -top-2 right-5 bg-white dark:bg-zinc-800 border rounded-sm">
           {canEditMessage && (
             <TooltipProvider>
@@ -245,7 +244,7 @@ export const ChatItem = ({
             </Tooltip>
           </TooltipProvider>
         </div>
-      )}
+      )} */}
     </div>
   );
 };
