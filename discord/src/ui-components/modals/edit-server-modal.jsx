@@ -16,19 +16,20 @@ import { redirect, useNavigate } from "react-router-dom";
 import { Toaster, toast } from "sonner";
 import { useModal } from "../../hooks/use-modal-store";
 import url from "../../api/url";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import ImageUpload from "../ImageUpload";
 
 const EditServerModal = () => {
+  const [file, setFile] = useState("");
+  const [name, setName] = useState("");
+  const [loading, setLoading] = useState("");
+
   const { isOpen, onClose, type, data } = useModal();
 
   const isModalOpen = isOpen && type === "editServer";
 
   const { server } = data;
 
-  const { register, handleSubmit, watch, formState, defaultValues, setValue } =
-    useForm();
-
-  const isLoading = formState.isSubmitting;
   const navigate = useNavigate();
 
   const handleClose = () => {
@@ -37,23 +38,26 @@ const EditServerModal = () => {
 
   useEffect(() => {
     if (server) {
-      setValue("name", server.name);
-      // setValue("imageUrl", server.imageUrl);
+      setName(server?.name);
+      setFile(server?.imageUrl || null);
     }
   }, [server]);
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (name, imgUrl) => {
+    setLoading(true);
     try {
-      const response = await url.patch(
-        `/server/updateServer/${server?._id}`,
-        data
-      );
+      const response = await url.patch(`/server/updateServer/${server?._id}`, {
+        name: name,
+        imageUrl: imgUrl,
+      });
 
       onClose();
       toast.success("Server Updated!!");
     } catch (error) {
       console.log(error);
       toast.error(error.response.data);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -70,26 +74,36 @@ const EditServerModal = () => {
             always change it later.
           </DialogDescription>
         </DialogHeader>
+        <ImageUpload endpoint="serverImage" setFile={setFile} file={file} />
+
         <div className="mt-8 space-y-8 px-6">
-          <form action="" className="group" onSubmit={handleSubmit(onSubmit)}>
+          <form
+            action=""
+            className="group"
+            onSubmit={(e) => {
+              e.preventDefault();
+              onSubmit(name, file);
+            }}
+          >
             <div className="mb-6">
               <label className="mb-2 block text-sm text-gray-600">
                 Server Name
               </label>
               <input
-                {...register("name")}
+                onChange={(e) => setName(e.target.value)}
                 id="name"
                 placeholder="Enter Server Name"
                 className="w-full rounded-md border border-gray-300 px-3 py-2.5 placeholder-gray-300 shadow shadow-gray-100 focus:border-gray-500 focus:outline-none valid:[&:not(:placeholder-shown)]:border-green-500 [&:not(:placeholder-shown):not(:focus):invalid~span]:block invalid:[&:not(:placeholder-shown):not(:focus)]:border-red-400"
                 required
+                value={name}
               />
               {/* <span className="mt-2 hidden text-sm text-red-400">
                Server name is required.
               </span> */}
             </div>
             <DialogFooter className=" py-4">
-              <Button disabled={isLoading} className="w-full">
-                {isLoading ? (
+              <Button disabled={loading} className="w-full">
+                {loading ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 ) : (
                   ""

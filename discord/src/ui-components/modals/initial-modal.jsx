@@ -27,10 +27,7 @@ export const InitialModal = () => {
   const [loading, setLoading] = useState("");
   const navigate = useNavigate();
 
-  console.log(file, "url");
-
   const onSubmit = async (name, imgUrl) => {
-    console.log(name, imgUrl);
     try {
       setLoading(true);
 

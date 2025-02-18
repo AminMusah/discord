@@ -31,6 +31,8 @@ const Channel = ({ server, profile }) => {
     (member) => member?.profile?._id === userId
   )?.role;
 
+  console.log(serverChannel);
+
   return (
     <div className="bg-white dark:bg-[#313338] flex flex-col h-screen ">
       <ChatHeader
