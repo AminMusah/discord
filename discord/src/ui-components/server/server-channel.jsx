@@ -65,40 +65,43 @@ export const ServerChannel = ({ channel, role, server, fisrtChannel }) => {
       >
         {channel?.name}
       </p>
-      {channel?.name !== "general" && role !== "GUEST" && (
-        <div className="ml-auto flex items-center gap-x-2">
-          <TooltipProvider>
-            <Tooltip delayDuration={50}>
-              <TooltipTrigger>
-                <Edit
-                  onClick={(e) => onAction(e, "editChannel")}
-                  className="hidden group-hover:block w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300 transition"
-                />
-              </TooltipTrigger>
-              <TooltipContent side="right" align="center">
-                <p className="font-semibold text-sm capitalize">Edit</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+      {channel?.name !== "general" ||
+        channel?.name !== "agent" ||
+        (role !== "GUEST" && (
+          <div className="ml-auto flex items-center gap-x-2">
+            <TooltipProvider>
+              <Tooltip delayDuration={50}>
+                <TooltipTrigger>
+                  <Edit
+                    onClick={(e) => onAction(e, "editChannel")}
+                    className="hidden group-hover:block w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300 transition"
+                  />
+                </TooltipTrigger>
+                <TooltipContent side="right" align="center">
+                  <p className="font-semibold text-sm capitalize">Edit</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
 
-          <TooltipProvider>
-            <Tooltip delayDuration={50}>
-              <TooltipTrigger>
-                <Trash
-                  onClick={(e) => onAction(e, "deleteChannel")}
-                  className="hidden group-hover:block w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300 transition"
-                />
-              </TooltipTrigger>
-              <TooltipContent side="right" align="center">
-                <p className="font-semibold text-sm capitalize">Delete</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        </div>
-      )}
-      {channel?.name === "general" && (
-        <Lock className="ml-auto w-4 h-4 text-zinc-500 dark:text-zinc-400" />
-      )}
+            <TooltipProvider>
+              <Tooltip delayDuration={50}>
+                <TooltipTrigger>
+                  <Trash
+                    onClick={(e) => onAction(e, "deleteChannel")}
+                    className="hidden group-hover:block w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300 transition"
+                  />
+                </TooltipTrigger>
+                <TooltipContent side="right" align="center">
+                  <p className="font-semibold text-sm capitalize">Delete</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
+        ))}
+      {channel?.name === "general" ||
+        (channel?.name === "agent" && (
+          <Lock className="ml-auto w-4 h-4 text-zinc-500 dark:text-zinc-400" />
+        ))}
     </button>
   );
 };
