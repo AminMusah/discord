@@ -36,6 +36,10 @@ const createChannel = async (req, res) => {
       return res.status(400).json({ error: 'Name cannot be "general"' });
     }
 
+    if (name === "agent") {
+      return res.status(400).json({ error: 'Name cannot be "agent"' });
+    }
+
     if (!serverId) {
       return res.status(400).json({ error: "Server ID is required" });
     }

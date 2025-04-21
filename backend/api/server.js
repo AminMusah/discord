@@ -1,5 +1,5 @@
 const express = require("express");
-const http = require("http"); // Required to create the server
+const http = require("http");
 const { Server } = require("socket.io");
 
 const userRoute = require("../routes/profile");
@@ -11,10 +11,11 @@ const messageRoute = require("../routes/directMessage");
 const messagesRoute = require("../routes/message");
 const conversationRoute = require("../routes/conversation");
 const liveKitRoute = require("../routes/livekit");
+const agentRoute = require("../routes/agent");
 
 const app = express();
 
-const server = http.createServer(app); // Create an HTTP server
+const server = http.createServer(app);
 
 require("../db/connect");
 
@@ -36,6 +37,7 @@ app.use("/api/", messageRoute);
 app.use("/api/", messagesRoute);
 app.use("/api/", conversationRoute);
 app.use("/api/", liveKitRoute);
+app.use("/api/", agentRoute);
 
 initializeSocket(server);
 
