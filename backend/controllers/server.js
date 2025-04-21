@@ -37,7 +37,7 @@ const createServer = async (req, res) => {
     const defaultAiChannel = new Channel({
       profile: _id,
       name: "Agent",
-      type: "TEXT",
+      type: "AGENT",
     });
 
     // Save the channel and add its ID to the server's channels array
