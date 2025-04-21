@@ -1,3 +1,4 @@
 # cord
 
-![discord-architectural-diagram](https://github.com/user-attachments/assets/aa22287f-7c1d-4d8c-83f3-891c01ef840f)
+
+![discord-architectural-diagram](https://github.com/user-attachments/assets/7bda99d9-05ce-4cef-80cb-d0805f38921f)
