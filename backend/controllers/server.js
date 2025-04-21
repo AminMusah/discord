@@ -22,7 +22,7 @@ const createServer = async (req, res) => {
       inviteCode: uuidv4(),
     });
 
-    //Create a default channel for the server
+    // Create a default channel for the server
     const defaultChannel = new Channel({
       profile: _id,
       name: "general",
@@ -32,6 +32,17 @@ const createServer = async (req, res) => {
     // Save the channel and add its ID to the server's channels array
     await defaultChannel.save();
     server.channels.push(defaultChannel._id);
+
+    // Create a default Ai channel for the server
+    const defaultAiChannel = new Channel({
+      profile: _id,
+      name: "Agent",
+      type: "TEXT",
+    });
+
+    // Save the channel and add its ID to the server's channels array
+    await defaultAiChannel.save();
+    server.channels.push(defaultAiChannel._id);
 
     // Create a member for the server
     const member = new Member({
@@ -52,6 +63,10 @@ const createServer = async (req, res) => {
 
     await Profile.findByIdAndUpdate(_id, {
       $push: { channels: defaultChannel._id },
+    });
+
+    await Profile.findByIdAndUpdate(_id, {
+      $push: { channels: defaultAiChannel._id },
     });
 
     await Profile.findByIdAndUpdate(_id, { $push: { members: member._id } });
@@ -133,50 +148,6 @@ const createInviteLink = async (req, res) => {
   }
 };
 
-// create member in server
-// const createMemberInServer = async (req, res) => {
-//   try {
-//     const { _id } = req.user;
-//     const { inviteCode } = req.body;
-
-//     if (!_id) {
-//       return res.status(401).send({ message: "Unauthorized" });
-//     }
-
-//     // Validate invite code
-//     if (!inviteCode) {
-//       return res.status(400).send({ message: "Invite code is required" });
-//     }
-
-//     // Find the server by invite code
-//     const server = await Server.findOne({ inviteCode });
-
-//     // Check if the server exists
-//     if (!server) {
-//       return res.status(404).send({ message: "Server not found" });
-//     }
-
-//     // Create a member for the server
-//     const member = new Member({
-//       profile: _id,
-//       server: server._id,
-//       role: "GUEST",
-//     });
-
-//     await member.save();
-//     server.members.push(member._id);
-
-//     // Save the updated server with channel and member references
-//     await server.save();
-
-//     // Send success response
-//     res.status(200).json(server);
-//   } catch (error) {
-//     // Handle errors gracefully
-//     console.error("Error creating member in server:", error);
-//     res.status(500).send(error);
-//   }
-// };
 // create member in server
 const createMemberInServer = async (req, res) => {
   try {
