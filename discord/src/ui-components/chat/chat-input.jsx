@@ -2,7 +2,7 @@ import { Plus, Smile } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useModal } from "@/hooks/use-modal-store";
 import useSocket from "../../hooks/useSocketHook";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import url from "../../api/url";
 import EmojiPicker from "../emoji-picker";
 import production from "../../base";
@@ -49,6 +49,16 @@ export const ChatInput = ({ apiUrl, query, name, type }) => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
+
+  useEffect(() => {
+    if (!loading) {
+      inputRef.current?.focus();
+    }
+  }, [loading]);
 
   return (
     <form className="">

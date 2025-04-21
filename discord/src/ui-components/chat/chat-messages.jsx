@@ -52,10 +52,13 @@ export const ChatMessages = ({
   const socketRef = useRef(null);
 
   // All messages
-  const getMessages = async () => {
+  const getMessages = async (load) => {
     try {
       if (currentPage === 1) {
         setStatus({ loading: true });
+      } else if (load === "load") {
+        setLoadingMore(false);
+        setStatus({ loading: false });
       } else {
         setLoadingMore(true);
       }
@@ -141,6 +144,12 @@ export const ChatMessages = ({
     }
   }, [data]);
 
+  useEffect(() => {
+    setTimeout(() => {
+      getMessages("load");
+    }, 2000);
+  }, [data]);
+
   // useEffect(() => {
   //   socketRef.current = io(`${production}`);
 
@@ -161,8 +170,7 @@ export const ChatMessages = ({
   //     if (socketRef.current) {
   //       socketRef.current.off(`chat:${channelId}:messages`);
   //       socketRef.current.disconnect();
-  //  socketRef.current.close();
-
+  //       socketRef.current.close();
   //     }
   //   };
   // }, [channelId]);

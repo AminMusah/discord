@@ -12,7 +12,7 @@ const ChatRoom = ({ apiUrl, query }) => {
   const [loading, setLoading] = useState(false);
   const scrollRef = useRef();
   const inputRef = useRef();
-  const { onOpen, getData } = useModal();
+  const { onOpen } = useModal();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,13 +28,11 @@ const ChatRoom = ({ apiUrl, query }) => {
 
       const aiResponse = res.data;
 
-      console.log(aiResponse);
       setMessages((prev) => [
         ...prev,
         { role: "assistant", content: aiResponse },
       ]);
     } catch (err) {
-      console.error(err);
       setMessages((prev) => [
         ...prev,
         { role: "assistant", content: err.response.data.error },
@@ -52,6 +50,16 @@ const ChatRoom = ({ apiUrl, query }) => {
       handleSubmit(e);
     }
   };
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
+
+  useEffect(() => {
+    if (!loading) {
+      inputRef.current?.focus();
+    }
+  }, [loading]);
 
   return (
     <main className={cn("bg-white dark:bg-[#313338] flex flex-col h-screen ")}>
@@ -128,28 +136,6 @@ const ChatRoom = ({ apiUrl, query }) => {
           </div>
         </div>
       </form>
-      {/* 
-      <form
-        onSubmit={handleSubmit}
-        className="border-input bg-background focus-within:ring-ring/10 relative mx-6 mb-6 flex items-center rounded-[16px] border px-3 py-1.5 pr-8 text-sm focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-0"
-      >
-        <Input
-          className="px-14 py-6 bg-zinc-200/90 dark:bg-zinc-700/75 border-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-zinc-600 dark:text-zinc-200"
-          placeholder="Ask me anything..."
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-        />
-
-        <Button
-          type="submit"
-          variant="ghost"
-          size="sm"
-          className="absolute bottom-1 right-1 size-6 rounded-full"
-          disabled={loading}
-        >
-          <ArrowUpIcon size={16} />
-        </Button>
-      </form> */}
     </main>
   );
 };
