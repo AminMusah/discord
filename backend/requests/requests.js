@@ -1,10 +1,10 @@
-const baseUrl =
-  process.env.NODE_ENV === "production"
-    ? process.env.ENDPOINT
-    : `http://localhost:${process.env.ENDPOINT || 8000}`;
-
 const apiRequest = async ({ endpoint, method = "GET", body, token }) => {
   try {
+    const baseUrl =
+      process.env.NODE_ENV === "production"
+        ? process.env.ENDPOINT
+        : `http://localhost:${process.env.PORT || 8000}`;
+
     const res = await fetch(`${baseUrl}/api/${endpoint}`, {
       method,
       headers: {
