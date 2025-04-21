@@ -1,4 +1,13 @@
-import { Edit, Hash, HashIcon, Lock, Mic, Trash, Video } from "lucide-react";
+import {
+  Bot,
+  Edit,
+  Hash,
+  HashIcon,
+  Lock,
+  Mic,
+  Trash,
+  Video,
+} from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { useParams, redirect, useNavigate } from "react-router-dom";
@@ -20,6 +29,9 @@ export const ServerChannel = ({ channel, role, server, fisrtChannel }) => {
   const IconMap = {
     TEXT: (
       <Hash className="flex-shrink-0 w-5 h-5 text-zinc-500 dark:text-zinc-400" />
+    ),
+    AGENT: (
+      <Bot className="flex-shrink-0 w-5 h-5 text-zinc-500 dark:text-zinc-400" />
     ),
     AUDIO: (
       <Mic className="flex-shrink-0 w-5 h-5 text-zinc-500 dark:text-zinc-400" />

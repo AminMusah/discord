@@ -12,6 +12,7 @@ import { ServerSection } from "./server-section";
 
 const typeOfChannel = {
   text: "TEXT",
+  agent: "AGENT",
   audio: "AUDIO",
   video: "VIDEO",
 };
@@ -22,6 +23,10 @@ const ServerSidebar = ({ server, profile }) => {
 
   const textChannels = server?.channels?.filter(
     (channel) => channel?.type === "TEXT"
+  );
+
+  const agentChannels = server?.channels?.filter(
+    (channel) => channel?.type === "AGENT"
   );
 
   const audioChannels = server?.channels?.filter(
@@ -63,6 +68,26 @@ const ServerSidebar = ({ server, profile }) => {
           />
           <div className="space-y-[2px]">
             {textChannels?.map((channel) => (
+              <ServerChannel
+                key={channel?._id}
+                channel={channel}
+                role={role}
+                server={server}
+                fisrtChannel={textChannels}
+              />
+            ))}
+          </div>
+        </div>
+        <div className="mb-2">
+          <ServerSection
+            sectionType="channels"
+            channelType={typeOfChannel}
+            role={role}
+            label="Agent Channel"
+            server={server}
+          />
+          <div className="space-y-[2px]">
+            {agentChannels?.map((channel) => (
               <ServerChannel
                 key={channel?._id}
                 channel={channel}

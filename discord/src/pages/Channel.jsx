@@ -6,6 +6,7 @@ import { getChannel } from "../redux/apiCalls";
 import { ChatInput } from "../ui-components/chat/chat-input";
 import { ChatMessages } from "../ui-components/chat/chat-messages";
 import MediaRoom from "../ui-components/media-room";
+import ChatRoom from "../ui-components/chat/chat-room";
 
 const Channel = ({ server, profile }) => {
   const [channels, setChannels] = useState("");
@@ -30,8 +31,6 @@ const Channel = ({ server, profile }) => {
   const role = server?.members?.find(
     (member) => member?.profile?._id === userId
   )?.role;
-
-  console.log(serverChannel);
 
   return (
     <div className="bg-white dark:bg-[#313338] flex flex-col h-screen ">
@@ -62,6 +61,18 @@ const Channel = ({ server, profile }) => {
             name={serverChannel?.name}
             type="channel"
             apiUrl="/socket/messages"
+            query={{
+              channelId: serverChannel?._id,
+              serverId: server?._id,
+            }}
+          />
+        </>
+      )}
+      {serverChannel?.type === "AGENT" && (
+        <>
+          {" "}
+          <ChatRoom
+            apiUrl="/agent/tools"
             query={{
               channelId: serverChannel?._id,
               serverId: server?._id,

@@ -1,5 +1,3 @@
-import axios from "axios";
-import { useForm } from "react-hook-form";
 import { Plus, Smile } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useModal } from "@/hooks/use-modal-store";

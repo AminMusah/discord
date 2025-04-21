@@ -1,7 +1,6 @@
 const { openai } = require("@ai-sdk/openai");
-const { CoreMessage, streamText, tool } = require("ai");
+const { streamText, tool } = require("ai");
 const { z } = require("zod");
-const { createServer } = require("./server");
 const { apiRequest } = require("../requests/requests");
 
 const messages = [];
@@ -93,9 +92,9 @@ async function agent(req, res) {
       fullResponse += delta;
     }
 
-    messages.push({ role: "assistant", content: fullResponse });
+    console.log(fullResponse);
 
-    console.log(messages);
+    messages.push({ role: "assistant", content: fullResponse });
 
     res.status(201).json(fullResponse);
   } catch (error) {

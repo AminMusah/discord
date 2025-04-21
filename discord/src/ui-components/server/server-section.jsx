@@ -23,23 +23,25 @@ export const ServerSection = ({
         {label}
       </p>
 
-      {role !== "GUEST" && sectionType === "channels" && (
-        <TooltipProvider>
-          <Tooltip delayDuration={50}>
-            <TooltipTrigger>
-              <span
-                onClick={() => onOpen("createChannel", { server })}
-                className="text-zinc-500 hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300 transition"
-              >
-                <Plus className="h-4 w-4" />
-              </span>
-            </TooltipTrigger>
-            <TooltipContent side="top" align="center">
-              <p className="font-semibold text-sm capitalize">{label}</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      )}
+      {label !== "Agent Channel" &&
+        role !== "GUEST" &&
+        sectionType === "channels" && (
+          <TooltipProvider>
+            <Tooltip delayDuration={50}>
+              <TooltipTrigger>
+                <span
+                  onClick={() => onOpen("createChannel", { server })}
+                  className="text-zinc-500 hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300 transition"
+                >
+                  <Plus className="h-4 w-4" />
+                </span>
+              </TooltipTrigger>
+              <TooltipContent side="top" align="center">
+                <p className="font-semibold text-sm capitalize">{label}</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        )}
       {role === "ADMIN" && sectionType === "members" && (
         <TooltipProvider>
           <Tooltip delayDuration={50}>
