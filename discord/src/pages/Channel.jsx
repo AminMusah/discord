@@ -72,6 +72,13 @@ const Channel = ({ server, profile }) => {
         <>
           {" "}
           <ChatRoom
+            member={membersInServer}
+            name={serverChannel?.name}
+            chatId={serverChannel?.id}
+            type="channel"
+            paramKey="channelId"
+            paramValue={serverChannel?._id}
+            role={role}
             apiUrl="/agent/tools"
             query={{
               channelId: serverChannel?._id,

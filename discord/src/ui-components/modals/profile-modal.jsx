@@ -82,7 +82,7 @@ export const ProfileModal = () => {
               <span className="text-xs"> {profile?.name}</span>
             </div>
           </div>
-          <div className="flex w-full flex-wrap mt-4">
+          <div className="flex w-full flex-wrap mt-4 gap-3">
             {profile?.servers &&
               profile?.servers.map((server) => (
                 <span className="px-6  mx-1 py-2 rounded-full bg-gray-100 transition-all duration-300">

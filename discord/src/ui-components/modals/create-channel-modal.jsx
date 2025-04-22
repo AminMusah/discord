@@ -71,7 +71,6 @@ export const CreateChannelModal = () => {
       if (!response.data) {
         throw new Error("Failed to creat channel");
       }
-      console.log(response);
       onClose();
     } catch (error) {
       console.log(error);
@@ -137,7 +136,7 @@ export const CreateChannelModal = () => {
                 </SelectContent>
               </Select>
             </div>
-            <DialogFooter className=" py-4">
+            <DialogFooter className="py-4">
               <Button disabled={isLoading} className="w-full">
                 {isLoading ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
