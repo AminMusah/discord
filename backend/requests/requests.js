@@ -1,11 +1,24 @@
-const apiRequest = async ({ endpoint, method = "GET", body, token }) => {
+const apiRequest = async ({
+  endpoint,
+  method = "GET",
+  body,
+  token,
+  params,
+}) => {
   try {
     const baseUrl =
       process.env.NODE_ENV === "production"
         ? process.env.ENDPOINT
         : `http://localhost:${process.env.PORT || 8000}`;
 
-    const res = await fetch(`${baseUrl}/api/${endpoint}`, {
+    let url = `${baseUrl}/api/${endpoint}`;
+
+    if (params && typeof params === "object") {
+      const query = new URLSearchParams(params).toString();
+      url += `?${query}`;
+    }
+
+    const res = await fetch(url, {
       method,
       headers: {
         "Content-Type": "application/json",

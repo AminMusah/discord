@@ -9,6 +9,8 @@ async function agent(req, res) {
   try {
     const { userInput } = req.body;
 
+    const { serverId } = req.query;
+
     const token = req.header("auth-token");
 
     if (!userInput) {
@@ -52,7 +54,7 @@ async function agent(req, res) {
         `,
       messages,
       tools: {
-        server: tool({
+        createServer: tool({
           description: "create a server",
           parameters: z.object({
             name: z.string(),
@@ -69,6 +71,41 @@ async function agent(req, res) {
                 status: "success",
                 data: res,
                 message: `Server "${name}" created successfully.`,
+              };
+            } catch (error) {
+              console.log(error);
+              return {
+                status: "error",
+                message: error.message,
+                data: error.data,
+              };
+            }
+          },
+        }),
+        createChannel: tool({
+          description: "create a channel",
+          parameters: z.object({
+            name: z.string().describe("name of the channel"),
+            type: z
+              .string()
+              .describe(
+                "type of channel which could be either TEXT, AUDIO or VIDEO"
+              ),
+            serverId: z
+              .string()
+              .describe("the server where the channel should reside"),
+          }),
+          execute: async ({ name, type }) => {
+            try {
+              const res = await apiRequest({
+                endpoint: `channel`,
+                method: "POST",
+                body: { name, type },
+                token,
+                params: { serverId },
+              });
+              return {
+                data: res,
               };
             } catch (error) {
               console.log(error);

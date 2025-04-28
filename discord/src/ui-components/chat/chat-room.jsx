@@ -6,7 +6,7 @@ import url from "../../api/url";
 import EmojiPicker from "../emoji-picker";
 import { useModal } from "../../hooks/use-modal-store";
 
-const ChatRoom = ({ apiUrl, query }) => {
+const ChatRoom = ({ apiUrl, serverId }) => {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -23,7 +23,13 @@ const ChatRoom = ({ apiUrl, query }) => {
     setLoading(true);
 
     try {
-      const res = await url.post(`/agent/tools`, { userInput: input });
+      const queryParams = new URLSearchParams({
+        serverId,
+      }).toString();
+
+      const res = await url.post(`${apiUrl}?${queryParams}`, {
+        userInput: input,
+      });
 
       const aiResponse = res.data;
 
@@ -33,6 +39,7 @@ const ChatRoom = ({ apiUrl, query }) => {
         ...prev,
         { role: "assistant", content: err.response.data.error },
       ]);
+      console.log(err);
     } finally {
       setLoading(false);
       scrollRef.current?.scrollIntoView({ behavior: "smooth" });

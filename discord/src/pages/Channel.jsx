@@ -84,6 +84,7 @@ const Channel = ({ server, profile }) => {
               channelId: serverChannel?._id,
               serverId: server?._id,
             }}
+            serverId={server?._id}
           />
         </>
       )}
