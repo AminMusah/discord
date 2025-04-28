@@ -12,7 +12,6 @@ const ChatRoom = ({ apiUrl, query }) => {
   const [loading, setLoading] = useState(false);
   const scrollRef = useRef();
   const inputRef = useRef();
-  const { onOpen } = useModal();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,10 +27,7 @@ const ChatRoom = ({ apiUrl, query }) => {
 
       const aiResponse = res.data;
 
-      setMessages((prev) => [
-        ...prev,
-        { role: "assistant", content: aiResponse },
-      ]);
+      simulateStream(aiResponse);
     } catch (err) {
       setMessages((prev) => [
         ...prev,
@@ -42,6 +38,33 @@ const ChatRoom = ({ apiUrl, query }) => {
       scrollRef.current?.scrollIntoView({ behavior: "smooth" });
       inputRef.current.focus();
     }
+  };
+
+  const simulateStream = (text) => {
+    let index = 0;
+    const typingSpeed = 20;
+    let current = "";
+
+    // Add an empty assistant message first
+    setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
+
+    const interval = setInterval(() => {
+      if (index < text.length) {
+        current += text[index];
+        index++;
+
+        setMessages((prev) => {
+          const updated = [...prev];
+          updated[updated.length - 1] = { role: "assistant", content: current };
+          return updated;
+        });
+      } else {
+        clearInterval(interval);
+      }
+
+      scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+      inputRef.current.focus();
+    }, typingSpeed);
   };
 
   const handleKeyDown = (e) => {
